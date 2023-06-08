@@ -47,36 +47,36 @@ class Media
         $this->editedAt = new \DateTimeImmutable();
     }
 
-    public function getHeight(): ?float
+    public function getHeight(): ?int
     {
         return $this->height;
     }
 
-    public function setHeight(?float $height): self
+    public function setHeight(?int $height): self
     {
         $this->height = $height;
 
         return $this;
     }
 
-    public function getWidth(): ?float
+    public function getWidth(): ?int
     {
         return $this->width;
     }
 
-    public function setWidth(?float $width): self
+    public function setWidth(?int $width): self
     {
         $this->width = $width;
 
         return $this;
     }
 
-    public function getSize(): ?float
+    public function getSize(): ?int
     {
         return $this->size;
     }
 
-    public function setSize(float $size): self
+    public function setSize(int $size): self
     {
         $this->size = $size;
 

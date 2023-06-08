@@ -23,10 +23,10 @@ class User extends Fixture
         $user = new EntityUser();
         $user->setUsername('marinette');
         $user->setRoles(['ROLE_ADMIN']);
-        $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'Visky0606!'));
+        $user->setPassword($this->userPasswordHasherInterface->hashPassword($user, 'azerty'));
         $user->setFirstName('Marine');
         $user->setLastName('Lancelin');
-        $user->setEmail('lancelinmarine@gmail.com');
+        $user->setEmail('hello@marinelancelin.fr');
         $createdAt = \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 year'));
         $user->setCreatedAt($createdAt);
         $editedAt = \DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 year'));

@@ -6,16 +6,14 @@ namespace App\Entity\Trait;
 
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+// use Symfony\Bridge\Doctrine\Types\UuidType;
+// use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 
 trait IdTrait
 {
-    #[ORM\Id]
-    #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private ?Uuid $id = null;
+    #[ORM\Column(type: 'integer')]
+    #[ORM\Id, ORM\GeneratedValue()]
+    private $id = null;
 
     public function getId(): ?Uuid
     {
