@@ -6,8 +6,6 @@ namespace App\Entity\Trait;
 
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
-// use Symfony\Bridge\Doctrine\Types\UuidType;
-// use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 
 trait IdTrait
 {
