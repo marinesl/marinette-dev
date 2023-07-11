@@ -21,9 +21,10 @@ namespace App\Controller\Back;
 use App\Entity\Post;
 use App\Form\Back\PostType;
 use App\Repository\PostRepository;
-use App\Service\ElementDeleteService;
+use App\Service\DeleteService;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\ElementChangeStatusService;
+use App\Service\ChangeStatusService;
+use App\Service\PostService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,30 +34,31 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/manager/post', name: 'back_post')]
 class PostController extends AbstractController
 {
-    private $element_toString;
-    private $is_female;
-    private $pageLength;
-
-    public function __construct()
+    public function __construct(
+        private readonly PostRepository $postRepository,
+        private readonly EntityManagerInterface $em, 
+        private readonly Request $request,
+        private readonly DeleteService $deleteService,
+        private readonly ChangeStatusService $changeStatusService,
+        private readonly PostService $postService,
+        private readonly string $element_toString = "post",
+        private readonly bool $is_female = false,
+        private readonly int $pageLength = 20
+    )
     {
-        $this->element_toString = "post";
-        $this->is_female = false;
-        $this->pageLength = 20;
     }
 
     /**
      * La liste des posts qui n'ont pas le statut "Corbeille"
      * 
-     * @param PostRepository postRepository
-     * 
      * @return Response back/element/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function list(PostRepository $postRepository): Response
+    public function list(): Response
     {
         // On récupère les posts dont le statut est différent de "Corbeille"
-        $posts = $postRepository->findNotCorbeille();
+        $posts = $this->postRepository->findNotCorbeille();
 
         // Pour le template
         $is_corbeille = false;
@@ -74,16 +76,14 @@ class PostController extends AbstractController
     /**
      * La liste des posts qui ont le statut "Corbeille"
      * 
-     * @param PostRepository postRepository
-     * 
      * @return Response back/element/list.html.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function listCorbeille(PostRepository $postRepository): Response
+    public function listCorbeille(): Response
     {
         // On récupère les posts dont le statut est "Corbeille"
-        $posts = $postRepository->findByStatus(4);
+        $posts = $this->postRepository->findByStatus(4);
 
         // Pour le template
         $is_corbeille = true;
@@ -102,18 +102,12 @@ class PostController extends AbstractController
      * Page de création d'un post
      * 
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser le post
-     * @param EntityManagerInterface em
-     * @param Request request
      * 
      * @return Response back/post/create_edit.html.twig
      */
     #[Route('/create/{is_preview}', name: '_create', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(
-        bool $is_preview,
-        EntityManagerInterface $em, 
-        Request $request
-    ): Response
+    public function create(bool $is_preview): Response
     {
         // On crée un nouveau post
         $post = new Post();
@@ -122,18 +116,15 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
 
         // On gère la requête du formulaire
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         // On vérifie si le formulaire a été envoyé et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $post->setCreatedAt(new \DateTimeImmutable());
-            $post->setEditedAt(new \DateTimeImmutable());
-            $em->persist($post);
-            $em->flush();
+            // On crée le post
+            $postCreated = $this->postService->create($post);
 
             // Message flash
-            $this->addFlash('success', "Le post a été créé.");
+            $this->addFlash($postCreated->status, $postCreated->message);
 
             // On récupère si le bouton Visualiser a été cliqué
             $is_preview = ($form->get('preview')->isClicked()) ? 1 : 0;
@@ -157,8 +148,6 @@ class PostController extends AbstractController
      * 
      * @param Post post
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser le post
-     * @param EntityManagerInterface em
-     * @param Request request
      * 
      * @return Response back/post/create_edit.html.twig
      */
@@ -166,26 +155,22 @@ class PostController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function edit(
         Post $post, 
-        bool $is_preview,
-        EntityManagerInterface $em,
-        Request $request
+        bool $is_preview
     ): Response
     {
         // On récupère le formulaire
         $form = $this->createForm(PostType::class, $post);
 
         // On gère la requête du formulaire
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         // On vérifie si le formulaire a été envoyé et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $post->setEditedAt(new \DateTimeImmutable());
-            $em->persist($post);
-            $em->flush();
+            // On crée le post
+            $postEdited = $this->postService->edit($post);
 
             // Message flash
-            $this->addFlash('success', "Les informations ont été enregistrées.");
+            $this->addFlash($postEdited->status, $postEdited->message);
 
             // On récupère si le bouton Visualiser a été cliqué
             $is_preview = ($form->get('preview')->isClicked()) ? 1 : 0;
@@ -208,20 +193,14 @@ class PostController extends AbstractController
     /**
      * Pop-up de confirmation de la suppression d'un ou plusieurs posts
      * 
-     * @param ElementDeleteService elementDeleteService
-     * @param PostRepository postRepository
-     * 
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function deleteConfirm(
-        ElementDeleteService $elementDeleteService,
-        PostRepository $postRepository
-    ): Response
+    public function deleteConfirm(): Response
     {
-        // Service ElementDeleteService
-        $message = $elementDeleteService->deleteConfirm($postRepository, 'post', false);
+        // Service DeleteService
+        $message = $this->deleteService->deleteConfirm($this->postRepository, 'post', false);
 
         return new Response(
             json_encode([
@@ -235,20 +214,14 @@ class PostController extends AbstractController
     /**
      * Suppression d'un ou plusieurs posts
      * 
-     * @param ElementDeleteService elementDeleteService
-     * @param PostRepository postRepository
-     * 
      * @return Response back/post/list_corbeille.html.twig
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(
-        ElementDeleteService $elementDeleteService,
-        PostRepository $postRepository
-    ): Response
+    public function delete(): Response
     {
-        // Service ElementDeleteService
-        $elementDeleteService->delete($postRepository);
+        // Service DeleteService
+        $this->deleteService->delete($this->postRepository);
 
         return $this->redirectToRoute('back_post_corbeille');
     }
@@ -257,20 +230,14 @@ class PostController extends AbstractController
     /**
      * Pop-up de confirmation du changement de statut d'un ou plusieurs post
      * 
-     * @param ElementChangeStatusService elementChangeStatusService
-     * @param PostRepository postRepository
-     * 
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/change_status/confirm', name: '_change_status_confirm', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function changeStatusConfirm(
-        ElementChangeStatusService $elementChangeStatusService,
-        PostRepository $postRepository
-    ): Response
+    public function changeStatusConfirm(): Response
     {
-        // Service ElementChangeStatusService
-        $message = $elementChangeStatusService->changeStatusConfirm($postRepository, 'post', false);
+        // Service ChangeStatusService
+        $message = $this->changeStatusService->changeStatusConfirm($this->postRepository, 'post', false);
 
         return new Response(
             json_encode([
@@ -284,20 +251,14 @@ class PostController extends AbstractController
     /**
      * Changement du statut d'un ou plusieurs post
      * 
-     * @param ElementChangeStatusService elementChangeStatusService
-     * @param PostRepository postRepository
-     * 
      * @return Response back/post/list.html.twig
      */
     #[Route('/change_status', name: '_change_status', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function changeStatus(
-        ElementChangeStatusService $elementChangeStatusService,
-        PostRepository $postRepository
-    ): Response
+    public function changeStatus(): Response
     {
-        // Service ElementChangeStatusService
-        $elementChangeStatusService->changeStatus($postRepository);
+        // Service ChangeStatusService
+        $this->changeStatusService->changeStatus($this->postRepository);
 
         return $this->redirectToRoute('back_post');
     }

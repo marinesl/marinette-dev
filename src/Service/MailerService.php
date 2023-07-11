@@ -17,11 +17,9 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class MailerService
 {
-    private $mailer;
 
-    public function __construct(MailerInterface $mailer) 
+    public function __construct(private readonly MailerInterface $mailer) 
     {
-        $this->mailer = $mailer;
     }
 
 

@@ -31,7 +31,4 @@ class SlugService
 		$slug  = trim( $slug, '-' ); // Remove spaces at start and end
 		return $slug;
 	}
-
-
-    
 }

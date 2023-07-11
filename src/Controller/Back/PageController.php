@@ -21,9 +21,10 @@ namespace App\Controller\Back;
 use App\Entity\Page;
 use App\Form\Back\PageType;
 use App\Repository\PageRepository;
-use App\Service\ElementDeleteService;
+use App\Service\DeleteService;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Service\ElementChangeStatusService;
+use App\Service\ChangeStatusService;
+use App\Service\PageService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,30 +34,31 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/manager/page', name: 'back_page')]
 class PageController extends AbstractController
 {
-    private $element_toString;
-    private $is_female;
-    private $pageLength;
-
-    public function __construct()
+    public function __construct(
+        private readonly PageRepository $pageRepository,
+        private readonly EntityManagerInterface $em,
+        private readonly Request $request,
+        private readonly DeleteService $deleteService,
+        private readonly ChangeStatusService $changeStatusService,
+        private readonly PageService $pageService,
+        private readonly string $element_toString = "page",
+        private readonly bool $is_female = true,
+        private readonly int $pageLength = 10
+    )
     {
-        $this->element_toString = "page";
-        $this->is_female = true;
-        $this->pageLength = 10;
     }
 
     /**
      * La liste des pages qui n'ont pas le statut "Corbeille"
      * 
-     * @param PageRepository pageRepository
-     * 
      * @return Response back/element/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function list(PageRepository $pageRepository): Response
+    public function list(): Response
     {
         // On récupère les pages dont le statut est différent de "Corbeille"
-        $pages = $pageRepository->findNotCorbeille();
+        $pages = $this->pageRepository->findNotCorbeille();
 
         // Pour le template
         $is_corbeille = false;
@@ -74,16 +76,14 @@ class PageController extends AbstractController
     /**
      * La liste des pages qui ont le statut "Corbeille"
      * 
-     * @param PageRepository pageRepository
-     * 
      * @return Response back/element/list.html.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function listCorbeille(PageRepository $pageRepository): Response
+    public function listCorbeille(): Response
     {
         // On récupère les pages dont le statut est "Corbeille"
-        $pages = $pageRepository->findByStatus(4);
+        $pages = $this->pageRepository->findByStatus(4);
 
         // Pour le template
         $is_corbeille = true;
@@ -102,18 +102,12 @@ class PageController extends AbstractController
      * Page de création d'une page
      * 
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser la page
-     * @param EntityManagerInterface em
-     * @param Request request
      * 
      * @return Response back/page/create_edit.html.twig
      */
     #[Route('/create/{is_preview}', name: '_create', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(
-        bool $is_preview,
-        EntityManagerInterface $em, 
-        Request $request
-    ): Response
+    public function create(bool $is_preview): Response
     {
         // On crée une nouvelle page
         $page = new Page();
@@ -122,18 +116,15 @@ class PageController extends AbstractController
         $form = $this->createForm(PageType::class, $page);
 
         // On gère la requête du formulaire
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         // On vérifie si le formulaire a été envoyé et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $page->setCreatedAt(new \DateTimeImmutable());
-            $page->setEditedAt(new \DateTimeImmutable());
-            $em->persist($page);
-            $em->flush();
-
+            // On crée la page
+            $pageCreated = $this->pageService->create($page);
+            
             // Message flash
-            $this->addFlash('success', "La page a été créée.");
+            $this->addFlash($pageCreated->status, $pageCreated->message);
 
             // On récupère si le bouton Visualiser a été cliqué
             $is_preview = ($form->get('preview')->isClicked()) ? 1 : 0;
@@ -157,8 +148,6 @@ class PageController extends AbstractController
      * 
      * @param Page page
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser la page
-     * @param EntityManagerInterface em
-     * @param Request request
      * 
      * @return Response back/page/create_edit.html.twig
      */
@@ -166,26 +155,22 @@ class PageController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function edit(
         Page $page, 
-        bool $is_preview,
-        EntityManagerInterface $em,
-        Request $request
+        bool $is_preview
     ): Response
     {
         // On récupère le formulaire
         $form = $this->createForm(PageType::class, $page);
 
         // On gère la requête du formulaire
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         // On vérifie si le formulaire a été envoyé et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $page->setEditedAt(new \DateTimeImmutable());
-            $em->persist($page);
-            $em->flush();
+            // On modifie la page
+            $pageEdited = $this->pageService->edit($page);
 
             // Message flash
-            $this->addFlash('success', "Les informations ont été enregistrées.");
+            $this->addFlash($pageEdited->status, $pageEdited->message);
 
             // On récupère si le bouton Visualiser a été cliqué
             $is_preview = ($form->get('preview')->isClicked()) ? 1 : 0;
@@ -208,20 +193,14 @@ class PageController extends AbstractController
     /**
      * Pop-up de confirmation de la suppression d'une ou plusieurs pages
      * 
-     * @param ElementDeleteService elementDeleteService
-     * @param PageRepository pageRepository
-     * 
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function deleteConfirm(
-        ElementDeleteService $elementDeleteService,
-        PageRepository $pageRepository
-    ): Response
+    public function deleteConfirm(): Response
     {
-        // Service ElementDeleteService
-        $message = $elementDeleteService->deleteConfirm($pageRepository, 'page');
+        // Service DeleteService
+        $message = $this->deleteService->deleteConfirm($this->pageRepository, 'page');
 
         return new Response(
             json_encode([
@@ -235,20 +214,14 @@ class PageController extends AbstractController
     /**
      * Suppression d'une ou plusieurs pages
      * 
-     * @param ElementDeleteService elementDeleteService
-     * @param PageRepository pageRepository
-     * 
      * @return Response back/page/list_corbeille.html.twig
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(
-        ElementDeleteService $elementDeleteService,
-        PageRepository $pageRepository
-    ): Response
+    public function delete(): Response
     {
-        // Service ElementDeleteService
-        $elementDeleteService->delete($pageRepository);
+        // Service DeleteService
+        $this->deleteService->delete($this->pageRepository);
 
         return $this->redirectToRoute('back_page_corbeille');
     }
@@ -257,20 +230,14 @@ class PageController extends AbstractController
     /**
      * Pop-up de confirmation du changement de statut d'une ou plusieurs pages
      * 
-     * @param ElementChangeStatusService elementChangeStatusService
-     * @param PageRepository pageRepository
-     * 
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/change_status/confirm', name: '_change_status_confirm', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function changeStatusConfirm(
-        ElementChangeStatusService $elementChangeStatusService,
-        PageRepository $pageRepository
-    ): Response
+    public function changeStatusConfirm(): Response
     {
-        // Service ElementChangeStatusService
-        $message = $elementChangeStatusService->changeStatusConfirm($pageRepository, 'page');
+        // Service ChangeStatusService
+        $message = $this->changeStatusService->changeStatusConfirm($this->pageRepository, 'page');
 
         return new Response(
             json_encode([
@@ -284,20 +251,14 @@ class PageController extends AbstractController
     /**
      * Changement du statut d'une ou plusieurs pages
      * 
-     * @param ElementChangeStatusService elementChangeStatusService
-     * @param PageRepository pageRepository
-     * 
      * @return Response back/page/list.html.twig
      */
     #[Route('/change_status', name: '_change_status', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
-    public function changeStatus(
-        ElementChangeStatusService $elementChangeStatusService,
-        PageRepository $pageRepository
-    ): Response
+    public function changeStatus(): Response
     {
-        // Service ElementChangeStatusService
-        $elementChangeStatusService->changeStatus($pageRepository);
+        // Service ChangeStatusService
+        $this->changeStatusService->changeStatus($this->pageRepository);
 
         return $this->redirectToRoute('back_page');
     }

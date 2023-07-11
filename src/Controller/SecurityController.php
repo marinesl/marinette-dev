@@ -18,6 +18,7 @@ use App\Form\Security\ForgottenPasswordType;
 use App\Form\Security\ResetPasswordType;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
+use App\Service\SecurityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,15 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 #[Route(path: '/manager', name: 'app_')]
 class SecurityController extends AbstractController
 {
+    public function __construct(
+        private readonly Request $request,
+        private readonly UserRepository $userRepository,
+        private readonly EntityManagerInterface $em,
+        private readonly SecurityService $securityService
+    )
+    {
+    }
+
     /**
      * Connexion de l'utilisateur
      * 
@@ -69,20 +79,14 @@ class SecurityController extends AbstractController
     /**
      * Demande de mot de passe oublié
      * 
-     * @param Request request
-     * @param UserRepository userRepository
      * @param TokenGeneratorInterface tokenGeneratorInterface
-     * @param EntityManagerInterface em
      * @param MailerService mailerService
      * 
      * @return Response security/forgotten_password.html.twig
      */
     #[Route('/mot-de-passe-oublie', name: 'forgotten_password')]
     public function forgottenPassword(
-        Request $request, 
-        UserRepository $userRepository,
         TokenGeneratorInterface $tokenGeneratorInterface,
-        EntityManagerInterface $em,
         MailerService $mailerService
     ): Response
     {
@@ -90,21 +94,18 @@ class SecurityController extends AbstractController
         $form = $this->createForm(ForgottenPasswordType::class);
 
         // On gère la requête
-        $form->handleRequest($request);
+        $form->handleRequest($this->request);
 
         // Si le formulaire a été envoyé et s'il est valide
         if ($form->isSubmitted() && $form->isValid()) {
             
             // On va chercher l'utilisateur par son email
-            $user = $userRepository->findOneByEmail($form->get('email')->getData());
+            $user = $this->userRepository->findOneByEmail($form->get('email')->getData());
 
             // On vérifie si on a un utilisateur
             if ($user) {
                 // On génère un token de réinitialisation
-                $token = $tokenGeneratorInterface->generateToken();
-                $user->setTokenResetPassword($token);
-                $em->persist($user);
-                $em->flush();
+                $token = $this->securityService->setToken($user);
 
                 // On génère un lien de réinitialisation
                 $url = $this->generateUrl('app_reset_password', [ 'token' => $token ], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -140,43 +141,29 @@ class SecurityController extends AbstractController
      * Réinitialisation du mot de passe
      * 
      * @param string token
-     * @param Request request
-     * @param UserRepository userRepository
-     * @param EntityManagerInterface em
      * @param UserPasswordHasherInterface passwordHasher
      * 
      * @return Response security/reset_password.html.twig
      */
     #[Route('/mot-de-passe-oublie/{token}', name: 'reset_password')]
     public function resetPassword(
-        string $token,
-        Request $request,
-        UserRepository $userRepository,
-        EntityManagerInterface $em,
-        UserPasswordHasherInterface $passwordHasher
+        string $token
     ): Response
     {
         // On vérifie si on a ce token dans la base
-        $user = $userRepository->findOneBy(['token_reset_password' => $token]);
+        $user = $this->userRepository->findOneBy(['token_reset_password' => $token]);
 
         if ($user) {
             $form = $this->createForm(ResetPasswordType::class);
 
-            $form->handleRequest($request);
+            $form->handleRequest($this->request);
 
             if ($form->isSubmitted() && $form->isValid()) {
                 // On efface le token
-                $user->setTokenResetPassword(null);
-                $user->setPassword(
-                    $passwordHasher->hashPassword(
-                        $user,
-                        $form->get('password')->getData()
-                    )
-                );
-                $em->persist($user);
-                $em->flush();
+                $this->securityService->deleteToken($user, $form->get('password')->getData());
 
                 $this->addFlash('success', 'Le mot de passe a été modifié avec succès.');
+
                 return $this->redirectToRoute('app_login');
             }
 

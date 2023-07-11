@@ -14,49 +14,42 @@ namespace App\Service;
 
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ElementChangeStatusService
+class ChangeStatusService
 {
-    private $request_stack;
-    private $em;
-    private $statusRepository;
-    
     public function __construct(
-        RequestStack $request_stack,
-        EntityManagerInterface $em,
-        StatusRepository $statusRepository
+        private readonly RequestStack $request_stack,
+        private readonly EntityManagerInterface $em,
+        private readonly StatusRepository $statusRepository,
+        private readonly Request $request
     )
     {
-        $this->request_stack = $request_stack;
-        $this->em = $em;
-        $this->statusRepository = $statusRepository;
+        $this->request = $this->request_stack->getCurrentRequest();
     }
 
 
     /**
      * Pop-up de confirmation du changement de statut d'un ou plusieurs éléments
      * 
-     * @param Object element_repository : repository de l'élement en cours
-     * @param string element_toString : string du nom de l'élément
+     * @param Object repository : repository de l'élement en cours
+     * @param string name : string du nom de l'élément
      * @param bool is_female : si la string du nom de l'élément est au féminin ou au masculin
      * 
      * @return string message
      */
     public function changeStatusConfirm(
-        $element_repository,
-        $element_toString,
+        $repository,
+        $name,
         $is_female = true
     ):string
     {
-        // On récupère la requête
-        $request = $this->request_stack->getCurrentRequest();
-
         // On récupère le(s) identifiant(s) envoyé(s) en GET
-        $ids = $request->query->get('ids');
+        $ids = $this->request->query->get('ids');
 
         // On récupère le statut envoyé en GET
-        $status = $request->query->get('status');
+        $status = $this->request->query->get('status');
 
         // On vérifie combien il y a d'identifiant
         $ids = explode(',',$ids);
@@ -64,15 +57,15 @@ class ElementChangeStatusService
         // On personnalise le message
         switch (count($ids)) {
             case 0:
-                $message = "Vous devez sélectionner un".(($is_female) ? "e" : "")." ou plusieurs ".$element_toString."s pour changer le statut.";
+                $message = "Vous devez sélectionner un".(($is_female) ? "e" : "")." ou plusieurs ".$name."s pour changer le statut.";
                 break;
 
             case 1:
-                $message = "Êtes-vous sûr.e de changer le statut de ".(($is_female) ? "cette" : "ce")." $element_toString ?";
+                $message = "Êtes-vous sûr.e de changer le statut de ".(($is_female) ? "cette" : "ce")." $name ?";
                 break;
             
             default:
-                $message = "Êtes-vous sûr.e de changer le statut de ces ".$element_toString."s en $status ?";
+                $message = "Êtes-vous sûr.e de changer le statut de ces ".$name."s en $status ?";
                 break;
         }
         
@@ -82,11 +75,11 @@ class ElementChangeStatusService
             foreach ($ids as $id) {
 
                 // On recherche l'élément
-                $element = $element_repository->find($id);
+                $element = $repository->find($id);
 
                 // On vérifie que l'élément a été trouvé
                 if (!$element) {
-                    $message = (($is_female) ? "La " : "Le ").$element_toString." n'a pas été trouvé".(($is_female) ? "e" : "").", veuillez recommencer.";
+                    $message = (($is_female) ? "La " : "Le ").$name." n'a pas été trouvé".(($is_female) ? "e" : "").", veuillez recommencer.";
                     break;
                 }
 
@@ -101,15 +94,12 @@ class ElementChangeStatusService
     /**
      * Changement du statut d'un ou plusieurs éléments
      * 
-     * @param Object element_repository : repository de l'élement en cours
+     * @param Object repository : repository de l'élement en cours
      */
-    public function changeStatus($element_repository):void
+    public function changeStatus($repository):void
     {
-        // On récupère la requête
-        $request = $this->request_stack->getCurrentRequest();
-
         // On récupère le(s) identifiant(s) envoyé(s) en GET
-        $ids = $request->query->get('ids');
+        $ids = $this->request->query->get('ids');
 
         // On vérifie combien il y a d'identifiant
         $ids = explode(',',$ids);
@@ -117,7 +107,7 @@ class ElementChangeStatusService
         foreach ($ids as $id) {
 
             // On recherche l'élément
-            $element = $element_repository->find($id);
+            $element = $repository->find($id);
 
             // Changement du statut en brouillon
             $element->setStatus($this->statusRepository->find(2));
