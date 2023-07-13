@@ -131,9 +131,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/forgotten_password.html.twig', [
-            'form' => $form->createView()
-        ]);
+        return $this->render('security/forgotten_password.html.twig', compact('form'));
     }
     
 
@@ -167,9 +165,7 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_login');
             }
 
-            return $this->render('security/reset_password.html.twig', [
-                'form' => $form->createView()
-            ]);
+            return $this->render('security/reset_password.html.twig', compact('form'));
         }
 
         $this->addFlash('danger', 'Le jeton est invalide.');

@@ -136,10 +136,7 @@ class PageController extends AbstractController
             ]);
         }
 
-        return $this->render('back/page/create_edit.html.twig', [
-            'form' => $form->createView(),
-            'is_preview' => $is_preview
-        ]);
+        return $this->render('back/page/create_edit.html.twig', compact('form', 'is_preview'));
     }
 
 
@@ -182,11 +179,7 @@ class PageController extends AbstractController
             ]);
         }
 
-        return $this->render('back/page/create_edit.html.twig', [
-            'page' => $page,
-            'form' => $form->createView() ,
-            'is_preview' => $is_preview
-        ]);
+        return $this->render('back/page/create_edit.html.twig', compact('page', 'form', 'is_preview'));
     }
 
 

@@ -136,10 +136,7 @@ class PostController extends AbstractController
             ]);
         }
 
-        return $this->render('back/post/create_edit.html.twig', [
-            'form' => $form->createView(),
-            'is_preview' => $is_preview
-        ]);
+        return $this->render('back/post/create_edit.html.twig', compact('form', 'is_preview'));
     }
 
 
@@ -182,11 +179,7 @@ class PostController extends AbstractController
             ]);
         }
 
-        return $this->render('back/post/create_edit.html.twig', [
-            'post' => $post,
-            'form' => $form->createView() ,
-            'is_preview' => $is_preview
-        ]);
+        return $this->render('back/post/create_edit.html.twig', compact('post', 'form', 'is_preview'));
     }
 
 

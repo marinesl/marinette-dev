@@ -34,8 +34,6 @@ class SettingController extends AbstractController
             $settingRepository->save($setting, true);
         }
 
-        return $this->render('back/setting/index.html.twig', [
-            'form' => $form->createView()
-        ]);
+        return $this->render('back/setting/index.html.twig', compact('form'));
     }
 }

@@ -106,11 +106,7 @@ class MediaController extends AbstractController
             20 /*limit per page*/
         );
 
-        return $this->render('back/media/list.html.twig', [
-            'pagination' => $pagination,
-            'formFilter' => $formFilter->createView(),
-            'formDragAndDrop' => $formDragAndDrop->createView()
-        ]);
+        return $this->render('back/media/list.html.twig', compact('pagination', 'formFilter', 'formDragAndDrop'));
     }
 
 
