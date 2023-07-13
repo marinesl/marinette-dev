@@ -14,16 +14,16 @@ namespace App\Service;
 
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ChangeStatusService
 {
+    private $request;
+
     public function __construct(
         private readonly RequestStack $request_stack,
         private readonly EntityManagerInterface $em,
-        private readonly StatusRepository $statusRepository,
-        private readonly Request $request
+        private readonly StatusRepository $statusRepository
     )
     {
         $this->request = $this->request_stack->getCurrentRequest();

@@ -17,14 +17,14 @@ use App\Entity\PostCategory;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostCategoryRepository;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class CategoryService
 {
+    private $request;
+    
     public function __construct(
         private readonly RequestStack $request_stack,
-        private readonly Request $request,
         private readonly PostCategoryRepository $postCategoryRepository,
         private readonly StatusRepository $statusRepository,
         private readonly EntityManagerInterface $em,

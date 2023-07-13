@@ -21,7 +21,7 @@ use App\Service\MailerService;
 use App\Service\SecurityService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,13 +33,16 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 #[Route(path: '/manager', name: 'app_')]
 class SecurityController extends AbstractController
 {
+    private $request;
+
     public function __construct(
-        private readonly Request $request,
+        private readonly RequestStack $request_stack,
         private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $em,
         private readonly SecurityService $securityService
     )
     {
+        $this->request = $this->request_stack->getCurrentRequest();
     }
 
     /**

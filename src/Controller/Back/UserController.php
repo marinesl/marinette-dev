@@ -19,7 +19,7 @@ use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,12 +27,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/manager/user', name: 'back_user_')]
 class UserController extends AbstractController
 {
+    private $request;
+
     public function __construct(
-        private readonly Request $request,
+        private readonly RequestStack $request_stack,
         private readonly EntityManagerInterface $em,
         private readonly UserService $userService
     )
     {
+        $this->request = $this->request_stack->getCurrentRequest();
     }
 
     /**

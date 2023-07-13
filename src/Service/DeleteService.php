@@ -13,15 +13,15 @@ declare(strict_types=1);
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class DeleteService
 {
+    private $request;
+
     public function __construct(
         private readonly RequestStack $request_stack,
-        private readonly EntityManagerInterface $em,
-        private readonly Request $request
+        private readonly EntityManagerInterface $em
     )
     {
         $this->request = $this->request_stack->getCurrentRequest();

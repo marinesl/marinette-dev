@@ -25,7 +25,7 @@ use App\Service\DeleteService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\ChangeStatusService;
 use App\Service\PostService;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -34,10 +34,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/manager/post', name: 'back_post')]
 class PostController extends AbstractController
 {
+    private $request;
+
     public function __construct(
         private readonly PostRepository $postRepository,
         private readonly EntityManagerInterface $em, 
-        private readonly Request $request,
+        private readonly RequestStack $request_stack,
         private readonly DeleteService $deleteService,
         private readonly ChangeStatusService $changeStatusService,
         private readonly PostService $postService,
@@ -46,6 +48,7 @@ class PostController extends AbstractController
         private readonly int $pageLength = 20
     )
     {
+        $this->request = $this->request_stack->getCurrentRequest();
     }
 
     /**

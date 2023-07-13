@@ -19,15 +19,15 @@ use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\MediaCategoryRepository;
 use App\Repository\MediaRepository;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class MediaService
 {
+    private $request;
+
     public function __construct(
         private readonly RequestStack $request_stack,
-        private readonly Request $request,
         private readonly EntityManagerInterface $em,
         private readonly MediaCategoryRepository $mediaCategoryRepository,
         private readonly StatusRepository $statusRepository,

@@ -20,7 +20,6 @@ use App\Entity\PostCategory;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostCategoryRepository;
 use App\Service\CategoryService;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +34,6 @@ class CategoryController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly PostCategoryRepository $postCategoryRepository,
-        private readonly Request $request,
         private readonly CategoryService $categoryService
     )
     {

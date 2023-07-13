@@ -20,7 +20,7 @@ use App\Service\DeleteService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\MediaService;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -29,14 +29,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/manager/media', name: 'back_media')]
 class MediaController extends AbstractController
 {
+    private $request;
+
     public function __construct(
-        private readonly Request $request,
+        private readonly RequestStack $request_stack,
         private readonly MediaRepository $mediaRepository,
         private readonly EntityManagerInterface $em,
         private readonly DeleteService $deleteService,
         private readonly MediaService $mediaService
     )
     {
+        $this->request = $this->request_stack->getCurrentRequest();
     }
 
     /**

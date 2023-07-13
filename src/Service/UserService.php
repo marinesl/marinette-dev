@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
 {
+    private $request;
+    
     public function __construct(
         private readonly RequestStack $request_stack,
-        private readonly Request $request,
         private readonly EntityManagerInterface $em,
         private readonly UserPasswordHasherInterface $hasher
     )
