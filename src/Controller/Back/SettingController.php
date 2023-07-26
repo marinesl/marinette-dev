@@ -6,6 +6,7 @@ namespace App\Controller\Back;
 
 use App\Form\Back\SettingType;
 use App\Repository\SettingRepository;
+use App\Security\Voter\SettingVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class SettingController extends AbstractController
 {
     #[Route('/', name: '')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(SettingVoter::EDIT)]
     public function index(
         SettingRepository $settingRepository,
         Request $request

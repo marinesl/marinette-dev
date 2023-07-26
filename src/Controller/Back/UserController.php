@@ -15,6 +15,7 @@ namespace App\Controller\Back;
 use App\Entity\User;
 use App\Form\Back\UserPasswordType;
 use App\Form\Back\UserType;
+use App\Security\Voter\UserVoter;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -46,7 +47,7 @@ class UserController extends AbstractController
      * @return Response back/user/edit.html.twig
      */
     #[Route('/edit/{username}', name: 'edit')]
-    #[Security("is_granted('ROLE_ADMIN') and user === theUser")]
+    #[IsGranted(UserVoter::EDIT, subject: 'theUser')]
     public function edit(User $theUser): Response
     {
         // On récupère le formulaire de modification des informations de l'utilisateur
@@ -81,7 +82,7 @@ class UserController extends AbstractController
      * @return Response back/user/edit_password.html.twig
      */
     #[Route('/edit/password/{username}', name: 'edit_password')]
-    #[Security("is_granted('ROLE_ADMIN') and user === theUser")]
+    #[IsGranted(UserVoter::EDIT, subject: 'theUser')]
     public function editPassword(User $theUser): Response
     {
         // On récupère le formulaire de modification du mot de passe de l'utilisateur

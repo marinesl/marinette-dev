@@ -21,6 +21,7 @@ namespace App\Controller\Back;
 use App\Entity\Page;
 use App\Form\Back\PageType;
 use App\Repository\PageRepository;
+use App\Security\Voter\PageVoter;
 use App\Service\DeleteService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\ChangeStatusService;
@@ -57,7 +58,7 @@ class PageController extends AbstractController
      * @return Response back/element/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::VIEW)]
     public function list(): Response
     {
         // On récupère les pages dont le statut est différent de "Corbeille"
@@ -82,7 +83,7 @@ class PageController extends AbstractController
      * @return Response back/element/list.html.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::VIEW)]
     public function listCorbeille(): Response
     {
         // On récupère les pages dont le statut est "Corbeille"
@@ -109,7 +110,7 @@ class PageController extends AbstractController
      * @return Response back/page/create_edit.html.twig
      */
     #[Route('/create/{is_preview}', name: '_create', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::CREATE)]
     public function create(bool $is_preview): Response
     {
         // On crée une nouvelle page
@@ -152,7 +153,7 @@ class PageController extends AbstractController
      * @return Response back/page/create_edit.html.twig
      */
     #[Route('/edit/{slug}/{is_preview}', name: '_edit', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::EDIT)]
     public function edit(
         Page $page, 
         bool $is_preview
@@ -192,7 +193,7 @@ class PageController extends AbstractController
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::DELETE)]
     public function deleteConfirm(): Response
     {
         // Service DeleteService
@@ -214,6 +215,7 @@ class PageController extends AbstractController
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::DELETE)]
     public function delete(): Response
     {
         // Service DeleteService
@@ -229,7 +231,7 @@ class PageController extends AbstractController
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/change_status/confirm', name: '_change_status_confirm', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::CHANGE_STATUS)]
     public function changeStatusConfirm(): Response
     {
         // Service ChangeStatusService
@@ -250,7 +252,7 @@ class PageController extends AbstractController
      * @return Response back/page/list.html.twig
      */
     #[Route('/change_status', name: '_change_status', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PageVoter::CHANGE_STATUS)]
     public function changeStatus(): Response
     {
         // Service ChangeStatusService

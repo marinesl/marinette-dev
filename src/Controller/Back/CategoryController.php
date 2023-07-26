@@ -19,6 +19,7 @@ use App\Entity\Status;
 use App\Entity\PostCategory;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostCategoryRepository;
+use App\Security\Voter\CategoryVoter;
 use App\Service\CategoryService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,7 +46,7 @@ class CategoryController extends AbstractController
      * @return Response back/category/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(CategoryVoter::VIEW)]
     public function list(): Response
     {
         // On récupère les catégories dont le statut est différent de "Corbeille"
@@ -64,7 +65,7 @@ class CategoryController extends AbstractController
      * @return Response back/page/list.html.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(CategoryVoter::VIEW)]
     public function listCorbeille(): Response
     {
         // On récupère les pages dont le statut est "Corbeille"
@@ -83,7 +84,7 @@ class CategoryController extends AbstractController
      * @return JsonResponse success
      */
     #[Route('/create', name: '_create', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(CategoryVoter::CREATE)]
     public function create(): JsonResponse
     {
         return $this->json($this->categoryService->create());
@@ -98,7 +99,7 @@ class CategoryController extends AbstractController
      * @return JsonResponse success
      */
     #[Route('/edit/{slug}', name: '_edit', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(CategoryVoter::EDIT)]
     public function edit(
         PostCategory $postCategory
     ): JsonResponse
@@ -138,7 +139,6 @@ class CategoryController extends AbstractController
                 $message = "<p>Êtes-vous sûr.e de changer le statut de cette categorie en ".$status->getName()." ?</p><p>".$postCategory->getName()."</p><p>Les posts changeront aussi de statut.</p>";
                 break;
         }
-        
 
         return new Response(
             json_encode([

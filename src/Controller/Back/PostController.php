@@ -21,6 +21,7 @@ namespace App\Controller\Back;
 use App\Entity\Post;
 use App\Form\Back\PostType;
 use App\Repository\PostRepository;
+use App\Security\Voter\PostVoter;
 use App\Service\DeleteService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\ChangeStatusService;
@@ -57,7 +58,7 @@ class PostController extends AbstractController
      * @return Response back/element/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::VIEW)]
     public function list(): Response
     {
         // On récupère les posts dont le statut est différent de "Corbeille"
@@ -82,7 +83,7 @@ class PostController extends AbstractController
      * @return Response back/element/list.html.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::VIEW)]
     public function listCorbeille(): Response
     {
         // On récupère les posts dont le statut est "Corbeille"
@@ -109,7 +110,7 @@ class PostController extends AbstractController
      * @return Response back/post/create_edit.html.twig
      */
     #[Route('/create/{is_preview}', name: '_create', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::CREATE)]
     public function create(bool $is_preview): Response
     {
         // On crée un nouveau post
@@ -152,7 +153,7 @@ class PostController extends AbstractController
      * @return Response back/post/create_edit.html.twig
      */
     #[Route('/edit/{slug}/{is_preview}', name: '_edit', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::EDIT)]
     public function edit(
         Post $post, 
         bool $is_preview
@@ -192,7 +193,7 @@ class PostController extends AbstractController
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::DELETE)]
     public function deleteConfirm(): Response
     {
         // Service DeleteService
@@ -213,7 +214,7 @@ class PostController extends AbstractController
      * @return Response back/post/list_corbeille.html.twig
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::DELETE)]
     public function delete(): Response
     {
         // Service DeleteService
@@ -229,7 +230,7 @@ class PostController extends AbstractController
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/change_status/confirm', name: '_change_status_confirm', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::CHANGE_STATUS)]
     public function changeStatusConfirm(): Response
     {
         // Service ChangeStatusService
@@ -250,7 +251,7 @@ class PostController extends AbstractController
      * @return Response back/post/list.html.twig
      */
     #[Route('/change_status', name: '_change_status', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(PostVoter::CHANGE_STATUS)]
     public function changeStatus(): Response
     {
         // Service ChangeStatusService

@@ -16,6 +16,7 @@ use App\Entity\Media;
 use App\Form\Back\FilterType;
 use App\Form\Back\DragAndDropType;
 use App\Repository\MediaRepository;
+use App\Security\Voter\MediaVoter;
 use App\Service\DeleteService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\MediaService;
@@ -50,7 +51,7 @@ class MediaController extends AbstractController
      * @return Reponse back/media/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(MediaVoter::VIEW)]
     public function index(PaginatorInterface $paginator): Response
     {   
         /**
@@ -121,7 +122,7 @@ class MediaController extends AbstractController
      * @return Reponse back/media/info.html.twig
      */
     #[Route('/info/{slug}', name: '_info')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(MediaVoter::INFO)]
     public function info(Media $media): Response
     {
         return $this->render('back/media/info.html.twig', compact('media'));
@@ -134,7 +135,7 @@ class MediaController extends AbstractController
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(MediaVoter::DELETE)]
     public function deleteConfirm(): Response
     {
         // Service DeleteService
@@ -155,7 +156,7 @@ class MediaController extends AbstractController
      * @return Response back/page/list_corbeille.html.twig
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted(MediaVoter::DELETE)]
     public function delete(): Response
     {
         // On récupère le média
