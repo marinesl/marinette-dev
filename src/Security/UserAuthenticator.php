@@ -2,7 +2,7 @@
 
 /**
  * Controller permettant l'authentification des utilisateurs.
- * 
+ *
  * Méthodes :
  * - authenticate() : Authentification de l'utilisateur
  * - onAuthenticationSuccess() : Succès de l'authentification
@@ -39,13 +39,10 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         $this->em = $em;
     }
 
-
     /**
-     * Authentification de l'utilisateur
-     * 
+     * Authentification de l'utilisateur.
+     *
      * @param Request request
-     * 
-     * @return Passport
      */
     public function authenticate(Request $request): Passport
     {
@@ -62,47 +59,40 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-
     /**
-     * Succès de l'authentification
-     * 
+     * Succès de l'authentification.
+     *
      * @param Request request
      * @param TokenInterface token
      * @param string firewallName
-     * 
+     *
      * @return Response back_dashboard
      */
     public function onAuthenticationSuccess(
-        Request $request, 
-        TokenInterface $token, 
+        Request $request,
+        TokenInterface $token,
         string $firewallName
-    ): ?Response
-    {
+    ): ?Response {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
         /* Enregistrement de la date et l'heure de connexion de l'utilisateur */
-            // On récupère l'utilisateur
-            $user = $token->getUser();
-            // On met la date et l'heure courante
-            $user->setLastLoggedAt(new \DateTimeImmutable());
-            $this->em->persist($user);
-            $this->em->flush();
-        /* */
-
+        // On récupère l'utilisateur
+        $user = $token->getUser();
+        // On met la date et l'heure courante
+        $user->setLastLoggedAt(new \DateTimeImmutable());
+        $this->em->persist($user);
+        $this->em->flush();
 
         // For example:
         return new RedirectResponse($this->urlGenerator->generate('back_dashboard'));
     }
-    
 
     /**
-     * Récupération de la route de connexion
-     * 
+     * Récupération de la route de connexion.
+     *
      * @param Request request
-     * 
-     * @return string
      */
     protected function getLoginUrl(Request $request): string
     {

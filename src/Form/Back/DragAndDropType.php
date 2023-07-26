@@ -16,12 +16,11 @@ class DragAndDropType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'attr' => array(
+        $resolver->setDefaults([
+            'attr' => [
                 'class' => 'dropzone',
-                'id' => 'my-dropzone'
-            )
-        ));
+                'id' => 'my-dropzone',
+            ],
+        ]);
     }
 }
-

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Controller permettant de gérer les catégories des posts
- * 
+ * Controller permettant de gérer les catégories des posts.
+ *
  * Méthodes :
  * - list() : La liste des catégories qui n'ont pas le statut "Corbeille"
  * - listCorbeille() : La liste des catégories qui ont le statut "Corbeille"
@@ -15,19 +15,19 @@ declare(strict_types=1);
 
 namespace App\Controller\Back;
 
-use App\Entity\Status;
 use App\Entity\PostCategory;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Status;
 use App\Repository\PostCategoryRepository;
 use App\Security\Voter\CategoryVoter;
 use App\Service\CategoryService;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/manager/category', name: 'back_category')]
 class CategoryController extends AbstractController
@@ -36,13 +36,12 @@ class CategoryController extends AbstractController
         private readonly EntityManagerInterface $em,
         private readonly PostCategoryRepository $postCategoryRepository,
         private readonly CategoryService $categoryService
-    )
-    {
+    ) {
     }
 
     /**
-     * La liste des catégories qui n'ont pas le statut "Corbeille"
-     * 
+     * La liste des catégories qui n'ont pas le statut "Corbeille".
+     *
      * @return Response back/category/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
@@ -58,10 +57,9 @@ class CategoryController extends AbstractController
         return $this->render('back/category/list.html.twig', compact('categories', 'is_corbeille'));
     }
 
-
     /**
-     * La liste des catégories qui ont le statut "Corbeille"
-     * 
+     * La liste des catégories qui ont le statut "Corbeille".
+     *
      * @return Response back/page/list.html.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
@@ -77,10 +75,9 @@ class CategoryController extends AbstractController
         return $this->render('back/category/list.html.twig', compact('categories', 'is_corbeille'));
     }
 
-
     /**
-     * Création d'une catégorie
-     * 
+     * Création d'une catégorie.
+     *
      * @return JsonResponse success
      */
     #[Route('/create', name: '_create', options: ['expose' => true])]
@@ -90,30 +87,27 @@ class CategoryController extends AbstractController
         return $this->json($this->categoryService->create());
     }
 
-
     /**
-     * Modification d'une catégorie
-     * 
+     * Modification d'une catégorie.
+     *
      * @param PostCategory postCategory
-     * 
+     *
      * @return JsonResponse success
      */
     #[Route('/edit/{slug}', name: '_edit', options: ['expose' => true])]
     #[IsGranted(CategoryVoter::EDIT)]
     public function edit(
         PostCategory $postCategory
-    ): JsonResponse
-    {
+    ): JsonResponse {
         return $this->json($this->categoryService->edit($postCategory));
     }
 
-
     /**
-     * Pop-up de confirmation du changement de statut
-     * 
+     * Pop-up de confirmation du changement de statut.
+     *
      * @param PostCategory postCategory
      * @param Status status
-     * 
+     *
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/change_status/confirm/{postCategory}/{status}', name: '_change_status_confirm', options: ['expose' => true])]
@@ -123,27 +117,26 @@ class CategoryController extends AbstractController
     public function changeStatusConfirm(
         PostCategory $postCategory,
         Status $status,
-    ): Response
-    {
+    ): Response {
         // Le message à afficher sur le pop-up
         switch ($status->getId()) {
             case 5:
-                $message = "<p>Êtes-vous sûr.e de supprimer définitivement cette catégorie ?</p><p>".$postCategory->getName()."</p><p>Les posts seront aussi supprimés.</p>";
+                $message = '<p>Êtes-vous sûr.e de supprimer définitivement cette catégorie ?</p><p>'.$postCategory->getName().'</p><p>Les posts seront aussi supprimés.</p>';
                 break;
 
             case 1:
-                $message = "<p>Êtes-vous sûr.e de changer le statut de cette categorie en ".$status->getName()." ?</p><p>".$postCategory->getName()."</p><p>Les posts auront un statut Brouillon.</p>";
+                $message = '<p>Êtes-vous sûr.e de changer le statut de cette categorie en '.$status->getName().' ?</p><p>'.$postCategory->getName().'</p><p>Les posts auront un statut Brouillon.</p>';
                 break;
-            
+
             default:
-                $message = "<p>Êtes-vous sûr.e de changer le statut de cette categorie en ".$status->getName()." ?</p><p>".$postCategory->getName()."</p><p>Les posts changeront aussi de statut.</p>";
+                $message = '<p>Êtes-vous sûr.e de changer le statut de cette categorie en '.$status->getName().' ?</p><p>'.$postCategory->getName().'</p><p>Les posts changeront aussi de statut.</p>';
                 break;
         }
 
         return new Response(
             json_encode([
                 'content' => $this->renderView('back/_popup/_yes_no_popup.html.twig', compact('message')),
-                'titre' => 'Changement de statut'
+                'titre' => 'Changement de statut',
             ])
         );
     }

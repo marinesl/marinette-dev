@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use Doctrine\Persistence\ObjectManager;
 use App\Entity\Setting as EntitySetting;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
 
 class Setting extends Fixture implements DependentFixtureInterface
 {
@@ -23,10 +23,10 @@ class Setting extends Fixture implements DependentFixtureInterface
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
-            Page::class
+            Page::class,
         ];
     }
 }

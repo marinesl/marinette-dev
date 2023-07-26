@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Trait\CreatedAtTrait;
+use App\Entity\Trait\EditedAtTrait;
 use App\Entity\Trait\IdTrait;
+use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
-use App\Entity\Trait\EditedAtTrait;
-use App\Entity\Trait\CreatedAtTrait;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity("username", "Un utilisateur existe déjà avec cet identifiant.")]
-#[UniqueEntity("email", "Un utilisateur existe déjà avec cet email.")]
+#[UniqueEntity('username', 'Un utilisateur existe déjà avec cet identifiant.')]
+#[UniqueEntity('email', 'Un utilisateur existe déjà avec cet email.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use IdTrait;

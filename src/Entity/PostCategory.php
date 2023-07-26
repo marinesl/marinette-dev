@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PostCategoryRepository::class)]
-#[UniqueEntity("name", "Une catégorie existe déjà avec ce nom.")]
+#[UniqueEntity('name', 'Une catégorie existe déjà avec ce nom.')]
 class PostCategory
 {
     use CreatedAtTrait;

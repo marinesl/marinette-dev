@@ -3,7 +3,7 @@
 /**
  * Les méthodes sont :
  * - findNotCorbeille() : On récupère les posts qui n'ont pas le statut "Corbeille"
- * - findLast10Edited() : On récupère les 10 derniers posts édités
+ * - findLast10Edited() : On récupère les 10 derniers posts édités.
  */
 
 declare(strict_types=1);
@@ -48,7 +48,9 @@ class PostRepository extends ServiceEntityRepository
     }
 
     /**
-     * On récupère les posts qui n'ont pas le statut "Corbeille"
+     * On récupère les posts qui n'ont pas le statut "Corbeille".
+     *
+     * @return Post[] Returns an array of Post objects
      */
     public function findNotCorbeille()
     {
@@ -60,9 +62,10 @@ class PostRepository extends ServiceEntityRepository
         ;
     }
 
-
     /**
-     * On récupère les 10 derniers posts édités
+     * On récupère les 10 derniers posts édités.
+     *
+     * @return Post[] Returns an array of Post objects
      */
     public function findLast10Edited()
     {

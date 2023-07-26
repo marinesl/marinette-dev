@@ -3,7 +3,7 @@
 /**
  * Les méthodes sont :
  * - findNotCorbeille() : On récupère les pages qui n'ont pas le statut "Corbeille"
- * - findAllQuery() : findAll() method but return query
+ * - findAllQuery() : findAll() method but return query.
  */
 
 declare(strict_types=1);
@@ -48,7 +48,9 @@ class PageRepository extends ServiceEntityRepository
     }
 
     /**
-     * On récupère les pages qui n'ont pas le statut "Corbeille"
+     * On récupère les pages qui n'ont pas le statut "Corbeille".
+     *
+     * @return Page[] Returns an array of Page objects
      */
     public function findNotCorbeille()
     {
@@ -60,9 +62,10 @@ class PageRepository extends ServiceEntityRepository
         ;
     }
 
-
     /**
-     * findAll() method but return query
+     * findAll() method but return query.
+     *
+     * @return Page[] Returns an array of Page objects
      */
     public function findAllQuery()
     {

@@ -20,8 +20,8 @@ class ResetPasswordType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'class' => 'form-control',
-                    'autofocus' => ''
-                ]
+                    'autofocus' => '',
+                ],
             ])
 
             ->add('save', SubmitType::class, [

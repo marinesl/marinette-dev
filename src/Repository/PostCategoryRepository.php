@@ -3,7 +3,7 @@
 /**
  * Les méthodes sont :
  * - findNotCorbeille() : On récupère les catégories qui n'ont pas le statut "Corbeille"
- * - findPublishOrderByAlpha() : On récupère les catégories publiées rangées par ordre alphabétique
+ * - findPublishOrderByAlpha() : On récupère les catégories publiées rangées par ordre alphabétique.
  */
 
 declare(strict_types=1);
@@ -48,7 +48,9 @@ class PostCategoryRepository extends ServiceEntityRepository
     }
 
     /**
-     * On récupère les catégories qui n'ont pas le statut "Corbeille"
+     * On récupère les catégories qui n'ont pas le statut "Corbeille".
+     *
+     * @return PostCategory[] Returns an array of PostCategory objects
      */
     public function findNotCorbeille()
     {
@@ -60,9 +62,10 @@ class PostCategoryRepository extends ServiceEntityRepository
         ;
     }
 
-
     /**
-     * On récupère les catégories publiées rangées par ordre alphabétique
+     * On récupère les catégories publiées rangées par ordre alphabétique.
+     *
+     * @return PostCategory[] Returns an array of PostCategory objects
      */
     public function findPublishOrderByAlpha()
     {

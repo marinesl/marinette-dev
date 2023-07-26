@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Service de gestion des pages
- * 
+ * Service de gestion des pages.
+ *
  * Méthodes :
  * - create() : Création d'une page
  * - edit() : Modiciation d'une page
@@ -25,17 +25,15 @@ class PageService
         private readonly RequestStack $request_stack,
         private readonly EntityManagerInterface $em,
         private readonly PageRepository $pageRepository
-    )
-    {
+    ) {
         $this->request = $this->request_stack->getCurrentRequest();
     }
 
-
     /**
-     * Création d'une page
-     * 
+     * Création d'une page.
+     *
      * @param Page page
-     * 
+     *
      * @return JsonResponse success
      */
     public function create($page): JsonResponse
@@ -47,12 +45,11 @@ class PageService
         return $this->json(['status' => 'success', 'message' => 'La page a été créée.']);
     }
 
-
     /**
-     * Modiciation d'une page
-     * 
+     * Modiciation d'une page.
+     *
      * @param Page page
-     * 
+     *
      * @return JsonResponse success
      */
     public function edit($page): JsonResponse

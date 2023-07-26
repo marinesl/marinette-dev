@@ -4,42 +4,45 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use Faker\Factory;
 use App\Entity\Media as EntityMedia;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class Media extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
         // Folder path to be flushed
-        $folder_path = "public/uploads";
+        $folder_path = 'public/uploads';
 
         // List of name of files inside
         // specified folder
-        $files = glob($folder_path . '/*');
+        $files = glob($folder_path.'/*');
 
         // Delete all the files of the list
         foreach ($files as $file) {
-            if (is_file($file)) unlink($file);
-        } 
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
 
-        for ($i=0; $i < 10; $i++)
+        for ($i = 0; $i < 10; ++$i) {
             $this->createMedia($manager);
+        }
 
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
-            Status::class
+            Status::class,
         ];
     }
 
-    public function createMedia($manager) 
+    public function createMedia($manager)
     {
         $faker = Factory::create('fr_FR');
 

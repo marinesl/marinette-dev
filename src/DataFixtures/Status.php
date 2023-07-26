@@ -8,14 +8,15 @@ use App\Entity\Status as EntityStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class Status extends Fixture 
+class Status extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $arrayStatus = ['Publié', 'Brouillon', 'En relecture', 'Corbeille', 'Supprimé']; 
+        $arrayStatus = ['Publié', 'Brouillon', 'En relecture', 'Corbeille', 'Supprimé'];
 
-        foreach ($arrayStatus as $status)
+        foreach ($arrayStatus as $status) {
             $this->createStatus($status, $manager);
+        }
 
         $manager->flush();
     }

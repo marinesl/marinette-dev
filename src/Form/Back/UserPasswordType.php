@@ -22,27 +22,27 @@ class UserPasswordType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Entrez votre mot de passe actuel',
-                ]
+                ],
             ])
 
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'required' => true,
                 'invalid_message' => 'Les deux mots de passe doivent être identiques.',
-                'first_options'  => [
+                'first_options' => [
                     'label' => 'Nouveau mot de passe',
                     'attr' => [
                         'class' => 'form-control',
                         'placeholder' => 'Entrez le nouveau mot de passe',
-                    ]
+                    ],
                 ],
                 'second_options' => [
                     'label' => 'Répétez le mot de passe',
                     'attr' => [
                         'class' => 'form-control',
                         'placeholder' => 'Entrez le nouveau mot de passe',
-                    ]
-                ]
+                    ],
+                ],
             ])
 
             ->add('save', SubmitType::class, [
@@ -52,5 +52,7 @@ class UserPasswordType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void {}
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+    }
 }

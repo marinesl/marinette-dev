@@ -4,28 +4,29 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use Faker\Factory;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Entity\PostCategory as EntityPostCategory;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class PostCategory extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $arrayPostCategories = ["HTML", "CSS", "PHP", "JS", "Anglais"];
+        $arrayPostCategories = ['HTML', 'CSS', 'PHP', 'JS', 'Anglais'];
 
-        foreach ($arrayPostCategories as $cat) 
+        foreach ($arrayPostCategories as $cat) {
             $this->createPostCategory($cat, $manager);
+        }
 
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
-            Status::class
+            Status::class,
         ];
     }
 
@@ -39,13 +40,14 @@ class PostCategory extends Fixture implements DependentFixtureInterface
         $postCategory->setCreatedAt(\DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 year')));
         $postCategory->setEditedAt(\DateTimeImmutable::createFromMutable($faker->dateTimeBetween('-1 year')));
 
-        if ($name == "Anglais")
+        if ('Anglais' === $name) {
             $postCategory->setStatus($this->getReference('status-corbeille'));
-        else
+        } else {
             $postCategory->setStatus($this->getReference('status-publié'));
-        
+        }
+
         $manager->persist($postCategory);
-        
+
         $this->addReference('category-'.strtolower($name), $postCategory);
     }
 }

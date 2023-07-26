@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Service de gestion des utilisateurs
- * 
+ * Service de gestion des utilisateurs.
+ *
  * Méthodes :
  * - edit() : Modification d'un utilisateur
  * - editPassword() : Modification du mot de passe
@@ -21,23 +21,21 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserService
 {
     private $request;
-    
+
     public function __construct(
         private readonly RequestStack $request_stack,
         private readonly EntityManagerInterface $em,
         private readonly UserPasswordHasherInterface $hasher,
         private readonly UserRepository $userRepository
-    )
-    {
+    ) {
         $this->request = $this->request_stack->getCurrentRequest();
     }
 
-
     /**
-     * Modification d'un utilisateur
-     * 
+     * Modification d'un utilisateur.
+     *
      * @param User user
-     * 
+     *
      * @return JsonResponse success
      */
     public function edit($user): JsonResponse
@@ -46,27 +44,26 @@ class UserService
         $user->setEditedAt(new \DateTimeImmutable());
         $this->userRepository->save($user, true);
 
-        return $this->json([ 'status' => 'success', 'message' => 'Les informations ont été enregistrées.' ]);
+        return $this->json(['status' => 'success', 'message' => 'Les informations ont été enregistrées.']);
     }
 
-
     /**
-     * Modification du mot de passe
-     * 
+     * Modification du mot de passe.
+     *
      * @param User user
      * @param string currentPassword
-     * 
+     *
      * @return JsonResponse success
      */
     public function editPassword(
         $user,
         $currentPassword,
         $newPassword
-    ): JsonResponse
-    {
+    ): JsonResponse {
         // On vérifie si le mot de passe actuel rentré est identique au mot de passe de l'utilisateur connecté
-        if (!$this->hasher->isPasswordValid($user, $currentPassword))
-            return $this->json([ 'status' => 'danger', 'message' => "Votre mot de passe actuel est incorrect."]);
+        if (!$this->hasher->isPasswordValid($user, $currentPassword)) {
+            return $this->json(['status' => 'danger', 'message' => 'Votre mot de passe actuel est incorrect.']);
+        }
 
         // Encode the plain password
         $user->setPassword(
@@ -82,6 +79,6 @@ class UserService
         // On registre les informations de l'utilisateur
         $this->userRepository->save($user, true);
 
-        return $this->json([ 'status' => 'success', 'message' => "Le nouveau mot de passe a été enregistré."]);
+        return $this->json(['status' => 'success', 'message' => 'Le nouveau mot de passe a été enregistré.']);
     }
 }

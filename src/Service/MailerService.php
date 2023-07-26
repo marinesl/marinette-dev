@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 /**
  * Service de gestion des emails.
- * 
+ *
  * Méthodes :
  * - sendEmail() : Envoi des emails
  */
@@ -11,21 +11,19 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 
 class MailerService
 {
-
-    public function __construct(private readonly MailerInterface $mailer) 
+    public function __construct(private readonly MailerInterface $mailer)
     {
     }
 
-
     /**
-     * Envoi des emails
-     * 
+     * Envoi des emails.
+     *
      * @param string to : adresse email de destination
      * @param string subject : objet de l'mail
      * @param string template : nom du fichier Twig du contenu de l'email
@@ -36,8 +34,7 @@ class MailerService
         string $subject,
         string $template,
         array $context
-    ): void
-    {
+    ): void {
         // On va créer le mail
         $email = (new TemplatedEmail())
             ->to($to)

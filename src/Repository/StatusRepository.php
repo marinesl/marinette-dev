@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Les méthodes sont : 
+ * Les méthodes sont :
  * - findAll() : Override findAll() method
- * - findAllQuery() : findAll() method but return query
+ * - findAllQuery() : findAll() method but return query.
  */
 
 declare(strict_types=1);
@@ -48,7 +48,9 @@ class StatusRepository extends ServiceEntityRepository
     }
 
     /**
-     * Override findAll() method
+     * Override findAll() method.
+     *
+     * @return Status[] Returns an array of Status objects
      */
     public function findAll(): array
     {
@@ -61,7 +63,9 @@ class StatusRepository extends ServiceEntityRepository
     }
 
     /**
-     * findAll() method but return query
+     * findAll() method but return query.
+     *
+     * @return Status[] Returns an array of Status objects
      */
     public function findAllQuery()
     {

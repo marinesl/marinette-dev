@@ -2,7 +2,7 @@
 
 /**
  * Les méthodes sont :
- * - findByTitle() : Recherche les médias contenant une chaine dans le nom
+ * - findByTitle() : Recherche les médias contenant une chaine dans le nom.
  */
 
 declare(strict_types=1);
@@ -46,10 +46,11 @@ class MediaRepository extends ServiceEntityRepository
         }
     }
 
-
     /**
-     * Recherche les médias contenant une chaine dans le nom
+     * Recherche les médias contenant une chaine dans le nom.
+     *
      * @param string title titre du média
+     *
      * @return Media[] Returns an array of Media objects
      */
     public function findByTitle($title): array

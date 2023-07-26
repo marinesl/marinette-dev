@@ -4,28 +4,29 @@ declare(strict_types=1);
 
 namespace App\DataFixtures;
 
-use Faker\Factory;
 use App\Entity\Page as EntityPage;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class Page extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-        $arrayPages = ["Accueil", "Mentions légales", 'Recherche'];
+        $arrayPages = ['Accueil', 'Mentions légales', 'Recherche'];
 
-        foreach ($arrayPages as $page)
+        foreach ($arrayPages as $page) {
             $this->createPage($manager, $page);
+        }
 
         $manager->flush();
     }
 
-    public function getDependencies(): array 
+    public function getDependencies(): array
     {
         return [
-            Status::class
+            Status::class,
         ];
     }
 
@@ -44,7 +45,8 @@ class Page extends Fixture implements DependentFixtureInterface
         $page->setStatus($this->getReference('status-publié'));
         $manager->persist($page);
 
-        if ($title == "Accueil")
+        if ('Accueil' === $title) {
             $this->addReference('home', $page);
+        }
     }
 }

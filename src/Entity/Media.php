@@ -117,7 +117,7 @@ class Media
         $this->name = $name;
 
         return $this;
-    } 
+    }
 
     public function getPath(): ?string
     {
@@ -129,5 +129,5 @@ class Media
         $this->path = $path;
 
         return $this;
-    } 
+    }
 }

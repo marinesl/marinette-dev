@@ -7,11 +7,11 @@ namespace App\Controller\Back;
 use App\Form\Back\SettingType;
 use App\Repository\SettingRepository;
 use App\Security\Voter\SettingVoter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/manager/setting', name: 'back_setting')]
 class SettingController extends AbstractController
@@ -21,8 +21,7 @@ class SettingController extends AbstractController
     public function index(
         SettingRepository $settingRepository,
         Request $request
-    ): Response
-    {
+    ): Response {
         // On récupère les settings
         $setting = $settingRepository->find(1);
 

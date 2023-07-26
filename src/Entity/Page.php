@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PageRepository::class)]
-#[UniqueEntity("slug", "Une page existe déjà avec ce slug.")]
+#[UniqueEntity('slug', 'Une page existe déjà avec ce slug.')]
 class Page
 {
     use CreatedAtTrait;

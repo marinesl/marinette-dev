@@ -19,8 +19,7 @@ class DashboardController extends AbstractController
     public function index(
         PostCategoryRepository $postCategoryRepository,
         PostRepository $postRepository
-    ): Response
-    {
+    ): Response {
         // On récupère les 10 derniers posts publiés ou mis à jour
         $posts = $postRepository->findLast10Edited();
 

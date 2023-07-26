@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-#[UniqueEntity("slug", "Un post existe déjà avec ce slug.")]
+#[UniqueEntity('slug', 'Un post existe déjà avec ce slug.')]
 class Post
 {
     use CreatedAtTrait;

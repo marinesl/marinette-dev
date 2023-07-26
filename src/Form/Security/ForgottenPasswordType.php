@@ -21,8 +21,8 @@ class ForgottenPasswordType extends AbstractType
                 'attr' => [
                     'placeholder' => 'exemple@email.fr',
                     'class' => 'form-control',
-                    'autofocus' => ''
-                ]
+                    'autofocus' => '',
+                ],
             ])
 
             ->add('save', SubmitType::class, [

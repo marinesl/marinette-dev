@@ -27,8 +27,8 @@ class UserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length(['max' => 100]),
-                    new Assert\NotNull()
-                ]
+                    new Assert\NotNull(),
+                ],
             ])
 
             ->add('first_name', TextType::class, [
@@ -40,8 +40,8 @@ class UserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length(['max' => 100]),
-                    new Assert\NotNull()
-                ]
+                    new Assert\NotNull(),
+                ],
             ])
 
             ->add('username', TextType::class, [
@@ -53,8 +53,8 @@ class UserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length(['max' => 180]),
-                    new Assert\NotNull()
-                ]
+                    new Assert\NotNull(),
+                ],
             ])
 
             ->add('email', EmailType::class, [
@@ -66,8 +66,8 @@ class UserType extends AbstractType
                 ],
                 'constraints' => [
                     new Assert\Length(['max' => 200]),
-                    new Assert\NotNull()
-                ]
+                    new Assert\NotNull(),
+                ],
             ])
 
             ->add('save', SubmitType::class, [

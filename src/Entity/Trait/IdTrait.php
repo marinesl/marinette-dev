@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity\Trait;
 
-use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 trait IdTrait
 {

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Controller permettant de gérer les pages
- * 
+ * Controller permettant de gérer les pages.
+ *
  * Méthodes :
  * - list() : La liste des pages qui n'ont pas le statut "Corbeille"
  * - listCorbeille() : La liste des pages qui ont le statut "Corbeille"
@@ -22,15 +22,15 @@ use App\Entity\Page;
 use App\Form\Back\PageType;
 use App\Repository\PageRepository;
 use App\Security\Voter\PageVoter;
-use App\Service\DeleteService;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Service\ChangeStatusService;
+use App\Service\DeleteService;
 use App\Service\PageService;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/manager/page', name: 'back_page')]
 class PageController extends AbstractController
@@ -44,17 +44,16 @@ class PageController extends AbstractController
         private readonly DeleteService $deleteService,
         private readonly ChangeStatusService $changeStatusService,
         private readonly PageService $pageService,
-        private readonly string $element_toString = "page",
+        private readonly string $element_toString = 'page',
         private readonly bool $is_female = true,
         private readonly int $pageLength = 10
-    )
-    {
+    ) {
         $this->request = $this->request_stack->getCurrentRequest();
     }
 
     /**
-     * La liste des pages qui n'ont pas le statut "Corbeille"
-     * 
+     * La liste des pages qui n'ont pas le statut "Corbeille".
+     *
      * @return Response back/element/list.html.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
@@ -72,14 +71,13 @@ class PageController extends AbstractController
             'element_toString' => $this->element_toString,
             'is_female' => $this->is_female,
             'pageLength' => $this->pageLength,
-            'is_corbeille' => $is_corbeille
+            'is_corbeille' => $is_corbeille,
         ]);
     }
 
-
     /**
-     * La liste des pages qui ont le statut "Corbeille"
-     * 
+     * La liste des pages qui ont le statut "Corbeille".
+     *
      * @return Response back/element/list.html.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
@@ -97,16 +95,15 @@ class PageController extends AbstractController
             'element_toString' => $this->element_toString,
             'is_female' => $this->is_female,
             'pageLength' => $this->pageLength,
-            'is_corbeille' => $is_corbeille
+            'is_corbeille' => $is_corbeille,
         ]);
     }
 
-
     /**
-     * Page de création d'une page
-     * 
+     * Page de création d'une page.
+     *
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser la page
-     * 
+     *
      * @return Response back/page/create_edit.html.twig
      */
     #[Route('/create/{is_preview}', name: '_create', options: ['expose' => true])]
@@ -126,7 +123,7 @@ class PageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // On crée la page
             $pageCreated = $this->pageService->create($page);
-            
+
             // Message flash
             $this->addFlash($pageCreated->status, $pageCreated->message);
 
@@ -135,30 +132,28 @@ class PageController extends AbstractController
 
             // Redirection vers la page de modification
             return $this->redirectToRoute('back_page_edit', [
-                'slug' => $page->getSlug() ,
-                'is_preview' => $is_preview
+                'slug' => $page->getSlug(),
+                'is_preview' => $is_preview,
             ]);
         }
 
         return $this->render('back/page/create_edit.html.twig', compact('form', 'is_preview'));
     }
 
-
     /**
-     * Page de modification d'une page
-     * 
+     * Page de modification d'une page.
+     *
      * @param Page page
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser la page
-     * 
+     *
      * @return Response back/page/create_edit.html.twig
      */
     #[Route('/edit/{slug}/{is_preview}', name: '_edit', options: ['expose' => true])]
     #[IsGranted(PageVoter::EDIT)]
     public function edit(
-        Page $page, 
+        Page $page,
         bool $is_preview
-    ): Response
-    {
+    ): Response {
         // On récupère le formulaire
         $form = $this->createForm(PageType::class, $page);
 
@@ -179,17 +174,16 @@ class PageController extends AbstractController
             // Redirection vers la page de modification
             return $this->redirectToRoute('back_page_edit', [
                 'slug' => $page->getSlug(),
-                'is_preview' => $is_preview
+                'is_preview' => $is_preview,
             ]);
         }
 
         return $this->render('back/page/create_edit.html.twig', compact('page', 'form', 'is_preview'));
     }
 
-
     /**
-     * Pop-up de confirmation de la suppression d'une ou plusieurs pages
-     * 
+     * Pop-up de confirmation de la suppression d'une ou plusieurs pages.
+     *
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
@@ -202,19 +196,17 @@ class PageController extends AbstractController
         return new Response(
             json_encode([
                 'content' => $this->renderView('back/_popup/_yes_no_popup.html.twig', compact('message')),
-                'titre' => 'Suppression'
+                'titre' => 'Suppression',
             ])
         );
     }
 
-
     /**
-     * Suppression d'une ou plusieurs pages
-     * 
+     * Suppression d'une ou plusieurs pages.
+     *
      * @return Response back/page/list_corbeille.html.twig
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
-    #[IsGranted('ROLE_ADMIN')]
     #[IsGranted(PageVoter::DELETE)]
     public function delete(): Response
     {
@@ -224,10 +216,9 @@ class PageController extends AbstractController
         return $this->redirectToRoute('back_page_corbeille');
     }
 
-
     /**
-     * Pop-up de confirmation du changement de statut d'une ou plusieurs pages
-     * 
+     * Pop-up de confirmation du changement de statut d'une ou plusieurs pages.
+     *
      * @return Response back/_popup/_yes_no_popup.html.twig
      */
     #[Route('/change_status/confirm', name: '_change_status_confirm', options: ['expose' => true])]
@@ -240,15 +231,14 @@ class PageController extends AbstractController
         return new Response(
             json_encode([
                 'content' => $this->renderView('back/_popup/_yes_no_popup.html.twig', compact('message')),
-                'titre' => 'Changement de statut'
+                'titre' => 'Changement de statut',
             ])
         );
     }
 
-
     /**
-     * Changement du statut d'une ou plusieurs pages
-     * 
+     * Changement du statut d'une ou plusieurs pages.
+     *
      * @return Response back/page/list.html.twig
      */
     #[Route('/change_status', name: '_change_status', options: ['expose' => true])]

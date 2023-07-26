@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Controller permettant d'afficher les posts en front
- * 
+ * Controller permettant d'afficher les posts en front.
+ *
  * Méthodes :
  * - preview() : Prévisualisation du post en front
  */
@@ -21,10 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     /**
-     * Prévisualisation du post en front
-     * 
+     * Prévisualisation du post en front.
+     *
      * @param Post post
-     * 
+     *
      * @return Response front/post/preview.html.twig
      */
     #[Route('/preview/post/{slug}', name: '_preview', options: ['expose' => true])]

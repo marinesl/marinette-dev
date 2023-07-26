@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Controller permettant d'afficher les pages en front
- * 
+ * Controller permettant d'afficher les pages en front.
+ *
  * Méthodes :
  * - preview() : Prévisualisation de la page en front
  */
@@ -21,10 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class PageController extends AbstractController
 {
     /**
-     * Prévisualisation de la page en front
-     * 
+     * Prévisualisation de la page en front.
+     *
      * @param Page page
-     * 
+     *
      * @return Response front/page/preview.html.twig
      */
     #[Route('/preview/page/{slug}', name: '_preview', options: ['expose' => true])]

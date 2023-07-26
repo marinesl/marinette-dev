@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Service de gestion de la sécurité
- * 
+ * Service de gestion de la sécurité.
+ *
  * Méthodes :
  * - setToken() : On génère un token de réinitialisation et on l'applique à l'utilisarteur
  */
@@ -27,17 +27,15 @@ class SecurityService
         private readonly TokenGeneratorInterface $tokenGeneratorInterface,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly UserRepository $userRepository
-    )
-    {
+    ) {
         $this->request = $this->request_stack->getCurrentRequest();
     }
 
-
     /**
-     * On génère un token de réinitialisation et on l'applique à l'utilisarteur
-     * 
+     * On génère un token de réinitialisation et on l'applique à l'utilisarteur.
+     *
      * @param User user
-     * 
+     *
      * @return string token
      */
     public function setToken($user): string
@@ -50,18 +48,16 @@ class SecurityService
         return $token;
     }
 
-
     /**
-     * On efface le token
-     * 
+     * On efface le token.
+     *
      * @param User user
      * @param string password
      */
     public function deleteToken(
         $user,
         $password
-    )
-    {
+    ) {
         $user->setTokenResetPassword(null);
         $user->setPassword(
             $this->passwordHasher->hashPassword(
