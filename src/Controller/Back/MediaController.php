@@ -98,7 +98,7 @@ class MediaController extends AbstractController
 
             } else {
                 // On récupère les médias avec le statut Publié
-                $medias = $this->mediaRepository->findBy(['status' => 1], ['created_at' => 'DESC']);
+                $medias = $this->mediaRepository->findBy(['status' => 1], ['createdAt' => 'DESC']);
             }
 
         /***/
