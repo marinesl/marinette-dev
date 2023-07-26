@@ -105,9 +105,7 @@ class DeleteService
             $element = $repository->find($id);
 
             // Suppression de l'élément
-            $this->em->remove($element);
+            $repository->remove($element, true);
         }
-
-        $this->em->flush();
     }
 }

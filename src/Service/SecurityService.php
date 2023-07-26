@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -24,7 +25,8 @@ class SecurityService
         private readonly RequestStack $request_stack,
         private readonly EntityManagerInterface $em,
         private readonly TokenGeneratorInterface $tokenGeneratorInterface,
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly UserRepository $userRepository
     )
     {
         $this->request = $this->request_stack->getCurrentRequest();
@@ -43,9 +45,7 @@ class SecurityService
         // On génère un token de réinitialisation
         $token = $this->tokenGeneratorInterface->generateToken();
         $user->setTokenResetPassword($token);
-
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->userRepository->save($user, true);
 
         return $token;
     }
@@ -70,7 +70,6 @@ class SecurityService
             )
         );
 
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->userRepository->save($user, true);
     }
 }

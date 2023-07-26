@@ -111,9 +111,7 @@ class ChangeStatusService
 
             // Changement du statut en brouillon
             $element->setStatus($this->statusRepository->find(2));
-            $this->em->persist($element);
+            $repository->save($element, true);
         }
-
-        $this->em->flush();
     }
 }

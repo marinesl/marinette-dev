@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -21,7 +22,8 @@ class PostService
 
     public function __construct(
         private readonly RequestStack $request_stack,
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly PostRepository $postRepository
     )
     {
         $this->request = $this->request_stack->getCurrentRequest();
@@ -39,9 +41,7 @@ class PostService
     {
         $post->setCreatedAt(new \DateTimeImmutable());
         $post->setEditedAt(new \DateTimeImmutable());
-
-        $this->em->persist($post);
-        $this->em->flush();
+        $this->postRepository->save($post, true);
 
         return $this->json([ 'status' => 'success', 'message' => 'Le post a été créé.' ]);
     }
@@ -57,9 +57,7 @@ class PostService
     public function edit($post): JsonResponse
     {
         $post->setEditedAt(new \DateTimeImmutable());
-
-        $this->em->persist($post);
-        $this->em->flush();
+        $this->postRepository->save($post, true);
 
         return $this->json([ 'status' => 'success', 'message' => 'Les informations ont été enregistrées.' ]);
     }

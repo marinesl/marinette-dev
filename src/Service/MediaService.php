@@ -108,8 +108,7 @@ class MediaService
         $media->setSlug($this->slugService->slug($data->title));
         $media->setExtension($data->extension);
 
-        $this->em->persist($media);
-        $this->em->flush();
+        $this->mediaRepository->save($media, true);
 
         return $this->json(['status' => 'done']);
     }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,7 +25,8 @@ class UserService
     public function __construct(
         private readonly RequestStack $request_stack,
         private readonly EntityManagerInterface $em,
-        private readonly UserPasswordHasherInterface $hasher
+        private readonly UserPasswordHasherInterface $hasher,
+        private readonly UserRepository $userRepository
     )
     {
         $this->request = $this->request_stack->getCurrentRequest();
@@ -42,10 +44,7 @@ class UserService
     {
         // Date de la modification
         $user->setEditedAt(new \DateTimeImmutable());
-
-        // On registre les informations de l'utilisateur
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->userRepository->save($user, true);
 
         return $this->json([ 'status' => 'success', 'message' => 'Les informations ont été enregistrées.' ]);
     }
@@ -81,8 +80,7 @@ class UserService
         $user->setEditedAt(new \DateTimeImmutable());
 
         // On registre les informations de l'utilisateur
-        $this->em->persist($user);
-        $this->em->flush();
+        $this->userRepository->save($user, true);
 
         return $this->json([ 'status' => 'success', 'message' => "Le nouveau mot de passe a été enregistré."]);
     }

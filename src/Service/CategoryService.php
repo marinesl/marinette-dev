@@ -17,6 +17,7 @@ use App\Entity\PostCategory;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostCategoryRepository;
+use App\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class CategoryService
@@ -26,6 +27,7 @@ class CategoryService
     public function __construct(
         private readonly RequestStack $request_stack,
         private readonly PostCategoryRepository $postCategoryRepository,
+        private readonly PostRepository $postRepository,
         private readonly StatusRepository $statusRepository,
         private readonly EntityManagerInterface $em,
     )
@@ -90,8 +92,7 @@ class CategoryService
             $postCategory->setSlug($checkData['new_slug']);
             $postCategory->setStatus($this->statusRepository->find($checkData['new_status_id']));
             $postCategory->setCreatedAt(new \DateTimeImmutable());
-            $this->em->persist($postCategory);
-            $this->em->flush();
+            $this->postCategoryRepository->save($postCategory, true);
         }
 
         return 'success';
@@ -131,20 +132,17 @@ class CategoryService
 
                 // On supprime tous les posts de la catégorie
                 $posts = $postCategory->getPosts();
-                foreach ($posts as $post) $this->em->remove($post);
-                $this->em->flush();
+                foreach ($posts as $post) $this->postRepository->remove($post, true);
 
                 // On supprime la catégorie
-                $this->em->remove($postCategory);
-                $this->em->flush();
+                $this->postCategoryRepository->remove($postCategory, true);
 
             } else {
                 $postCategory->setName($checkData['new_name']);
                 $postCategory->setSlug($checkData['new_slug']);
                 $postCategory->setStatus($this->statusRepository->find($checkData['new_status_id']));
                 $postCategory->setEditedAt(new \DateTimeImmutable());
-                $this->em->persist($postCategory);
-                $this->em->flush();
+                $this->postCategoryRepository->save($postCategory, true);
 
                 // Si le statut a changé
                 if ($checkData['new_status_id'] != $old_status_id) {
@@ -161,9 +159,8 @@ class CategoryService
 
                     foreach ($posts as $post) {
                         $post->setStatus($post_status);
-                        $this->em->persist($post);
+                        $this->postRepository->persist($post, true);
                     }
-                    $this->em->flush();
                 }
             }
         }

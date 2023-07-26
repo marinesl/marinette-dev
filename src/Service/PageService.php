@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Repository\PageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -22,7 +23,8 @@ class PageService
 
     public function __construct(
         private readonly RequestStack $request_stack,
-        private readonly EntityManagerInterface $em
+        private readonly EntityManagerInterface $em,
+        private readonly PageRepository $pageRepository
     )
     {
         $this->request = $this->request_stack->getCurrentRequest();
@@ -40,8 +42,7 @@ class PageService
     {
         $page->setCreatedAt(new \DateTimeImmutable());
         $page->setEditedAt(new \DateTimeImmutable());
-        $this->em->persist($page);
-        $this->em->flush();
+        $this->pageRepository->save($page, true);
 
         return $this->json(['status' => 'success', 'message' => 'La page a été créée.']);
     }
@@ -57,9 +58,7 @@ class PageService
     public function edit($page): JsonResponse
     {
         $page->setEditedAt(new \DateTimeImmutable());
-
-        $this->em->persist($page);
-        $this->em->flush();
+        $this->pageRepository->save($page, true);
 
         return $this->json(['status' => 'success', 'message' => 'Les informations ont été enregistrées.']);
     }
