@@ -1,0 +1,467 @@
+/*  */
+  
+
+/**********************************
+ * CONTAINER
+ * https://codepen.io/SunilSalaria/pen/rNzNyWV
+ **********************************/
+
+main.active {
+    margin-left: 0px !important;
+}
+  
+main {
+    margin-left: 250px;
+    transition: margin 0.5s;
+    min-height: 100vh;
+}
+
+section.container-fluid {
+    padding: 50px;
+}
+
+
+
+
+/**********************************
+ * FOOTER
+ **********************************/
+
+footer {
+    background-color: #E6E6E6;
+    color: black;
+}
+
+footer div {
+    font-size: 12px;
+}
+
+
+
+
+/**********************************
+ * HEADER
+ * https://codepen.io/SunilSalaria/pen/rNzNyWV
+ **********************************/
+
+#header-navbar #aside-toggle-btn {
+    color: #373737;
+    cursor: pointer;
+}
+
+#header-navbar .user-dropdown .dropdown-toggle:hover {
+    text-decoration: none;
+}
+
+#header-navbar .user-dropdown .dropdown-menu {
+    right: 0 !important;
+    left: auto !important;
+}
+ 
+
+
+/**********************************
+ * ASIDE
+ * https://codepen.io/SunilSalaria/pen/rNzNyWV
+ **********************************/
+
+#aside-nav.active {
+    width: 0px !important;
+}
+  
+#aside-nav {
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    background-color: #41B591;
+    width: 250px;
+    transition: width 0.5s;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+#aside-nav .nav-link {
+    font-size: 0.825rem;
+    padding: 0.725rem 1.625rem;
+    color: white;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+}
+
+#aside-nav .nav-link:hover {
+    text-decoration: none;
+}
+
+#aside-nav .nav-link svg {
+    height: 20px;
+    width: 20px;
+}
+
+#aside-nav .aside-brand {
+    padding: 1.15rem 1.725rem;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    fill: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#aside-nav .aside-brand svg {
+    height: 20px;
+    width: 20px;
+}
+
+#aside-nav .active,
+#aside-nav .nav-link:hover {
+    background-color: #f8f9fa;
+    color: #293042;
+    font-weight: 500;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.8);
+}
+
+
+
+
+/**********************************
+ * TYPO
+ **********************************/
+
+h1 {
+    margin-bottom: 30px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+span.strong {
+    font-family: 'Sarabun-Medium';
+}
+
+
+
+
+/**********************************
+ * FORM
+ **********************************/
+
+form .form-group {
+    margin-bottom: 15px;
+}
+
+form label {
+    font-family: 'Sarabun-SemiBold';
+}
+
+form fieldset {
+    border: 1px groove #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+            box-shadow:  0px 0px 0px 0px #000;
+}
+
+form fieldset legend {
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+    float: none;
+    font-family: 'Sarabun-Medium';
+}
+
+
+
+
+/**********************************
+ * BUTTON
+ **********************************/
+
+button.btn-info,
+button.btn-info.disabled,
+a.btn-info {
+    background-color: #E6E6E6;
+    border-color: #E6E6E6;
+    color: #676666;
+    opacity: 1;
+}
+
+button.btn-info:hover,
+button.btn-info.disabled:hover,
+button.btn.btn-info:active,
+a.btn-info:hover {
+    background-color: #fff;
+    border-color: #E6E6E6;
+    color: #676666;
+    text-decoration: none;
+}
+
+button.btn-warning,
+a.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+button.btn-warning:hover,
+a.btn-warning:hover {
+    background-color: #fff;
+    border-color: #ffc107;
+    color: #ffc107;
+    text-decoration: none;
+}
+
+button.btn-danger,
+a.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+button.btn-danger:hover,
+a.btn-danger:hover {
+    background-color: #fff;
+    border-color: #dc3545;
+    color: #dc3545;
+    text-decoration: none;
+}
+
+
+
+
+/**********************************
+ * MEDIA
+ **********************************/
+
+#media .row-first {
+    display: flex;
+    justify-content: space-between;
+}
+
+#media form[name=filter] .d-flex {
+    gap: 20px;
+}
+
+#media form[name=drag_and_drop] {
+    display: none;
+}
+
+#media .gallery {
+    margin-top: 30px;
+}
+
+#media .gallery .thumbnail {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+#media .gallery .thumbnail img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+#media .gallery .caption {
+    padding: 10px;
+    color: #555;
+    text-align: center;
+}
+
+#media .pagination {
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Sarabun-Regular';
+}
+
+#media .pagination .current {
+    color: #41B591;
+    font-family: 'Sarabun-Medium';
+    font-size: 20px;
+    line-height: 23px;
+}
+
+#media .pagination a {
+    color: #000;
+}
+
+#media .pagination a:hover {
+    color: #41B591;
+    text-decoration: none;
+}
+
+#media .pagination svg {
+    vertical-align: text-bottom;
+}
+
+#media-info .card {
+    margin-top: 30px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+
+#media-info .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+#media-info .card img {
+    border-radius: 5px 0 0 5px;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+#media-info .card-body {
+    padding: 30px;
+    height: 100%;
+}
+
+#media-info .card-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#media-info .card-text {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#media-info .btn-delete {
+    position: absolute;
+    bottom: 30px;
+}
+
+
+
+
+/**********************************
+ * TABLE (DATATABLE JS)
+ **********************************/
+
+/* Buttons */
+#table_wrapper .dt-buttons {
+    margin-bottom: 20px;
+} 
+
+#table_wrapper .dt-buttons .disabled {
+    display: none;
+}
+
+/* Table */
+table.table {
+    width: 100%;
+} 
+
+table.table {
+    background-color: #ffffff;
+}
+  
+table.table th {
+    background-color: #41B591;
+    color: #ffffff;
+}
+
+table.table th, table.table td {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+table.table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table.table td svg {
+    cursor: pointer;
+}
+
+table.table tr.edit-mode td.status {
+    display: flex;
+    gap: 5px;
+}
+
+table.table tr.edit-mode td.status button {
+    border: none;
+    padding: 0;
+}
+
+table.table tr.edit-mode td.status #btn-close {
+    padding-top: 4px;
+    cursor: pointer;
+}
+
+/* Pagination */
+#table_wrapper .dataTables_paginate .paginate_button {
+    border: none;
+}
+
+#table_wrapper .dataTables_paginate .paginate_button.disabled {
+    display: none;
+}
+
+#table_wrapper .dataTables_paginate .paginate_button:hover {
+    border: none;
+    background: none;
+    color: unset !important;
+}
+
+/* Block actions */
+div#block-actions {
+    margin-top: 20px;
+}
+
+div#block-actions.disabled {
+    display: none;
+}
+
+
+
+
+/**********************************
+ * POP-UP
+ **********************************/
+
+#myModal .modal-header button.close {
+    border: none;
+    background: none;
+}
+
+#myModal .row-message {
+    text-align: center;
+    font-family: 'Sarabun-Medium';
+}
+
+#myModal .row-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 30px;
+}
+
+
+
+
+/**********************************
+ * RESPONSIVE
+ * https://codepen.io/SunilSalaria/pen/rNzNyWV
+ **********************************/
+
+@media (min-width: 300px) and (max-width: 1023.98px) {
+    main {
+        margin-left: 0px !important;
+    }
+  
+    #aside-nav {
+        top: 63px !important;
+    }
+  
+    main {
+        overflow: hidden;
+    }
+  
+    #header-navbar {
+        position: fixed !important;
+    }
+  
+    #main {
+        margin-top: 60px !important;
+    }
+}

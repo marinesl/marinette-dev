@@ -1,0 +1,41 @@
+{
+    "devDependencies": {
+        "@babel/core": "^7.17.0",
+        "@babel/preset-env": "^7.16.0",
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/stimulus-bridge": "^3.2.0",
+        "@symfony/webpack-encore": "^4.0.0",
+        "core-js": "^3.23.0",
+        "css-loader": "^6.7.3",
+        "html-webpack-plugin": "^5.5.0",
+        "mini-css-extract-plugin": "^2.7.2",
+        "node-sass": "^8.0.0",
+        "regenerator-runtime": "^0.13.9",
+        "sass-loader": "^13.2.0",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-notifier": "^1.15.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@popperjs/core": "^2.11.6",
+        "bootstrap": "^5.2.3",
+        "datatables": "^1.10.18",
+        "datatables.net": "^1.13.2",
+        "datatables.net-buttons": "^2.3.4",
+        "datetime-moment": "^1.0.0",
+        "dropzone": "^6.0.0-beta.2",
+        "file-loader": "^6.0.0",
+        "jquery": "^3.6.3",
+        "moment": "^2.29.4",
+        "tinymce": "^6.3.1",
+        "tinymce-i18n": "^23.1.23"
+    }
+}
