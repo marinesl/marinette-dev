@@ -7,11 +7,11 @@ namespace App\Controller\Back;
 use App\Form\Back\SettingType;
 use App\Repository\SettingRepository;
 use App\Security\Voter\SettingVoter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/manager/setting', name: 'back_setting')]
 class SettingController extends AbstractController
