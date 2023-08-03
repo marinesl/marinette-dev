@@ -1,0 +1,47 @@
+{% extends "back/base.html.twig" %}
+
+{% block title %}
+    Les {{ element_toString }}s {% if is_corbeille %}dans la corbeille{% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+
+    {# Style pour DataTables JS #}
+    {{ encore_entry_link_tags('datatables') }}
+
+{% endblock %}
+
+{% block body %}
+
+    <h1>Les {{ element_toString }}s {% if is_corbeille %}dans la corbeille{% else %}en cours{% endif %}</h1>
+    
+    {# Tableau #}
+    {% include "back/_includes/_" ~ element_toString ~ "_list.html.twig" %}
+
+    {# Liste des actions pour la page corbeille #}
+    {% if is_corbeille %}
+        <div id="block-actions" class="disabled">
+            <select name="actions" id="actions" class="form-control">
+                <option value="">Choisissez une action</option>
+                <option value="delete">Supprimer définitivement</option>
+                <option value="change">Changer le statut en brouillon</option>
+            </select>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {# Variables pour le script #}
+    <script>
+        const is_corbeille = {% if is_corbeille == 0 %}false{% else %}true{% endif %};
+        const element_toString = '{{ element_toString }}'
+        const is_female = {% if is_female == 0 %}false{% else %}true{% endif %};
+        const pageLength = {{ pageLength }}
+    </script>
+
+    {# Script pour la page #}
+    {{ encore_entry_script_tags('elementList') }}
+
+{% endblock %}

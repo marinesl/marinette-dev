@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{% block title %}{% endblock %} | Marinette.dev</title>
+
+        {# Script pour Bootstrap #}
+        {{ encore_entry_link_tags('app') }}
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card mt-5">
+                        <div class="card-header">
+                            <h1 class="text-center">{{ block('title') }}</h1>
+                        </div>
+
+                        {% block card_body %}{% endblock %}
+                        
+                        {% block card_footer %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% block error %}
+            {% include "back/_includes/_flash.html.twig" %}
+        {% endblock %}
+
+        {# Script pour jQuery et Bootstrap #}
+        {{ encore_entry_script_tags('app') }}
+
+        {% block javascripts %}{% endblock %}
+    </body>
+
+</html>

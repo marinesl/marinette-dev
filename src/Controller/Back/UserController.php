@@ -42,7 +42,7 @@ class UserController extends AbstractController
      *
      * @param User user
      *
-     * @return Response back/user/edit.html.twig
+     * @return Response back/user/edit.twig
      */
     #[Route('/edit/{username}', name: 'edit')]
     #[IsGranted(UserVoter::EDIT, subject: 'theUser')]
@@ -64,7 +64,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('back_user_edit', ['username' => $this->getUser()->getUsername()]);
         }
 
-        return $this->render('back/user/edit.html.twig', [
+        return $this->render('back/user/edit.twig', [
             'form' => $form,
             'user' => $theUser,
         ]);
@@ -76,7 +76,7 @@ class UserController extends AbstractController
      * @param User user
      * @param UserPasswordHasherInterface hasher
      *
-     * @return Response back/user/edit_password.html.twig
+     * @return Response back/user/edit_password.twig
      */
     #[Route('/edit/password/{username}', name: 'edit_password')]
     #[IsGranted(UserVoter::EDIT, subject: 'theUser')]
@@ -104,7 +104,7 @@ class UserController extends AbstractController
             }
         }
 
-        return $this->render('back/user/edit_password.html.twig', [
+        return $this->render('back/user/edit_password.twig', [
             'form' => $form,
             'user' => $theUser,
         ]);

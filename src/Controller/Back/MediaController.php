@@ -47,7 +47,7 @@ class MediaController extends AbstractController
      *
      * @param PaginatorInterface paginator
      *
-     * @return Reponse back/media/list.html.twig
+     * @return Reponse back/media/list.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
     #[IsGranted(MediaVoter::VIEW)]
@@ -109,7 +109,7 @@ class MediaController extends AbstractController
             20 /* limit per page */
         );
 
-        return $this->render('back/media/list.html.twig', compact('pagination', 'formFilter', 'formDragAndDrop'));
+        return $this->render('back/media/list.twig', compact('pagination', 'formFilter', 'formDragAndDrop'));
     }
 
     /**
@@ -117,19 +117,19 @@ class MediaController extends AbstractController
      *
      * @param Media media
      *
-     * @return Reponse back/media/info.html.twig
+     * @return Reponse back/media/info.twig
      */
     #[Route('/info/{slug}', name: '_info')]
     #[IsGranted(MediaVoter::INFO)]
     public function info(Media $media): Response
     {
-        return $this->render('back/media/info.html.twig', compact('media'));
+        return $this->render('back/media/info.twig', compact('media'));
     }
 
     /**
      * Pop-up de confirmation de la suppression d'un média.
      *
-     * @return Response back/_popup/_yes_no_popup.html.twig
+     * @return Response back/_popup/_yes_no_popup.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
     #[IsGranted(MediaVoter::DELETE)]
@@ -140,7 +140,7 @@ class MediaController extends AbstractController
 
         return new Response(
             json_encode([
-                'content' => $this->renderView('back/_popup/_yes_no_popup.html.twig', compact('message')),
+                'content' => $this->renderView('back/_popup/_yes_no_popup.twig', compact('message')),
                 'titre' => 'Suppression',
             ])
         );
@@ -149,7 +149,7 @@ class MediaController extends AbstractController
     /**
      * Suppression d'un média.
      *
-     * @return Response back/page/list_corbeille.html.twig
+     * @return Response back/page/list_corbeille.twig
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
     #[IsGranted(MediaVoter::DELETE)]

@@ -39,7 +39,7 @@ class MailerService
         $email = (new TemplatedEmail())
             ->to($to)
             ->subject('Marinette.dev - '.$subject)
-            ->htmlTemplate("email/$template.html.twig")
+            ->htmlTemplate("email/$template.twig")
             ->context($context)
         ;
 

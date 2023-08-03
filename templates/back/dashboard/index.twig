@@ -1,0 +1,57 @@
+{% extends "back/base.html.twig" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+
+    <h1>Dashboard</h1>
+
+    <div>
+        <div>
+            <h2>Derniers posts mis à jour</h2>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Post</th>
+                        <th>Catégorie</th>
+                        <th>Édité le</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                        <tr>
+                            <td>{{ post.title }}</td>
+                            <td>{{ post.category.name }}</td>
+                            <td>{{ post.editedAt|date('d/m/Y') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2>Posts par catégorie</h2>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Catégorie</th>
+                        <th>Nombre de posts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.posts|length }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div></div>
+
+{% endblock %}

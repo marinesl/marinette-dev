@@ -48,7 +48,7 @@ class SecurityController extends AbstractController
      *
      * @param AuthenticationUtils authenticationUtils
      *
-     * @return Response security/login.html.twig
+     * @return Response security/login.twig
      */
     #[Route(path: '/login', name: 'login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -63,7 +63,7 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('security/login.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     /**
@@ -81,7 +81,7 @@ class SecurityController extends AbstractController
      * @param TokenGeneratorInterface tokenGeneratorInterface
      * @param MailerService mailerService
      *
-     * @return Response security/forgotten_password.html.twig
+     * @return Response security/forgotten_password.twig
      */
     #[Route('/mot-de-passe-oublie', name: 'forgotten_password')]
     public function forgottenPassword(
@@ -130,7 +130,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/forgotten_password.html.twig', compact('form'));
+        return $this->render('security/forgotten_password.twig', compact('form'));
     }
 
     /**
@@ -139,7 +139,7 @@ class SecurityController extends AbstractController
      * @param string token
      * @param UserPasswordHasherInterface passwordHasher
      *
-     * @return Response security/reset_password.html.twig
+     * @return Response security/reset_password.twig
      */
     #[Route('/mot-de-passe-oublie/{token}', name: 'reset_password')]
     public function resetPassword(string $token): Response
@@ -161,7 +161,7 @@ class SecurityController extends AbstractController
                 return $this->redirectToRoute('app_login');
             }
 
-            return $this->render('security/reset_password.html.twig', compact('form'));
+            return $this->render('security/reset_password.twig', compact('form'));
         }
 
         $this->addFlash('danger', 'Le jeton est invalide.');

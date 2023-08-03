@@ -1,0 +1,49 @@
+{% extends "back/base.html.twig" %}
+
+{% block title %}Info sur {{ media.title }}.{{ media.extension }}{% endblock %}
+
+{% block id %}media-info{% endblock %}
+
+{% block body %}
+
+    <h1>{{ media.title }}.{{ media.extension }}</h1>
+
+    {# On récupère le lien du média #}
+    {% set path = 'uploads/' ~ media.category.slug ~ '/' ~ media.title ~ '.' ~ media.extension %}
+
+    <div class="card">
+
+        <div class="row no-gutters">
+            
+            <div class="col-md-6">
+                <img src="{{ asset(path) | imagine_filter('thumb_info') }}" alt="{{ media.slug }}" class="card-img">
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h2 class="card-title">Informations sur l'image</h2>
+                    <p class="card-text"><span class="strong">Date d'ajout :</span> {{ media.createdAt|date('d/m/Y H:i') }}</p>
+                    <p class="card-text"><span class="strong">Largeur :</span> {{ media.originalWidth }} px</p>
+                    <p class="card-text"><span class="strong">Hauteur :</span> {{ media.originalHeight }} px</p>
+                    <p class="card-text"><span class="strong">Poids :</span> {{ media.originalSize }} octets</p>
+                    <p class="card-text"><span class="strong">Lien :</span> <a href="{{ asset(path) }}">{{ app_host }}{{ asset(path) }}</a></p>
+                    <button type="button" class="btn btn-danger btn-delete">Supprimer</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {# Variables pour le script #}
+    <script>
+        const id = {{ media.id }};
+    </script>
+
+    {# Script de la page #}
+    {{ encore_entry_script_tags('media_info') }}
+
+{% endblock %}

@@ -25,12 +25,12 @@ class PageController extends AbstractController
      *
      * @param Page page
      *
-     * @return Response front/page/preview.html.twig
+     * @return Response front/page/preview.twig
      */
     #[Route('/preview/page/{slug}', name: '_preview', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
     public function preview(Page $page): Response
     {
-        return $this->render('front/page/preview.html.twig', compact('page'));
+        return $this->render('front/page/preview.twig', compact('page'));
     }
 }

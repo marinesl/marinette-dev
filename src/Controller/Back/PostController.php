@@ -54,7 +54,7 @@ class PostController extends AbstractController
     /**
      * La liste des posts qui n'ont pas le statut "Corbeille".
      *
-     * @return Response back/element/list.html.twig
+     * @return Response back/element/list.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
     #[IsGranted(PostVoter::VIEW)]
@@ -66,7 +66,7 @@ class PostController extends AbstractController
         // Pour le template
         $is_corbeille = false;
 
-        return $this->render('back/element/list.html.twig', [
+        return $this->render('back/element/list.twig', [
             'posts' => $posts,
             'element_toString' => $this->element_toString,
             'is_female' => $this->is_female,
@@ -78,7 +78,7 @@ class PostController extends AbstractController
     /**
      * La liste des posts qui ont le statut "Corbeille".
      *
-     * @return Response back/element/list.html.twig
+     * @return Response back/element/list.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
     #[IsGranted(PostVoter::VIEW)]
@@ -90,7 +90,7 @@ class PostController extends AbstractController
         // Pour le template
         $is_corbeille = true;
 
-        return $this->render('back/element/list.html.twig', [
+        return $this->render('back/element/list.twig', [
             'posts' => $posts,
             'element_toString' => $this->element_toString,
             'is_female' => $this->is_female,
@@ -104,7 +104,7 @@ class PostController extends AbstractController
      *
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser le post
      *
-     * @return Response back/post/create_edit.html.twig
+     * @return Response back/post/create_edit.twig
      */
     #[Route('/create/{is_preview}', name: '_create', options: ['expose' => true])]
     #[IsGranted(PostVoter::CREATE)]
@@ -137,7 +137,7 @@ class PostController extends AbstractController
             ]);
         }
 
-        return $this->render('back/post/create_edit.html.twig', compact('form', 'is_preview'));
+        return $this->render('back/post/create_edit.twig', compact('form', 'is_preview'));
     }
 
     /**
@@ -146,7 +146,7 @@ class PostController extends AbstractController
      * @param Post post
      * @param bool is_preview pour savoir si l'utilisateur souhaite prévisualiser le post
      *
-     * @return Response back/post/create_edit.html.twig
+     * @return Response back/post/create_edit.twig
      */
     #[Route('/edit/{slug}/{is_preview}', name: '_edit', options: ['expose' => true])]
     #[IsGranted(PostVoter::EDIT)]
@@ -178,13 +178,13 @@ class PostController extends AbstractController
             ]);
         }
 
-        return $this->render('back/post/create_edit.html.twig', compact('post', 'form', 'is_preview'));
+        return $this->render('back/post/create_edit.twig', compact('post', 'form', 'is_preview'));
     }
 
     /**
      * Pop-up de confirmation de la suppression d'un ou plusieurs posts.
      *
-     * @return Response back/_popup/_yes_no_popup.html.twig
+     * @return Response back/_popup/_yes_no_popup.twig
      */
     #[Route('/delete/confirm', name: '_delete_confirm', options: ['expose' => true])]
     #[IsGranted(PostVoter::DELETE)]
@@ -195,7 +195,7 @@ class PostController extends AbstractController
 
         return new Response(
             json_encode([
-                'content' => $this->renderView('back/_popup/_yes_no_popup.html.twig', compact('message')),
+                'content' => $this->renderView('back/_popup/_yes_no_popup.twig', compact('message')),
                 'titre' => 'Suppression',
             ])
         );
@@ -204,7 +204,7 @@ class PostController extends AbstractController
     /**
      * Suppression d'un ou plusieurs posts.
      *
-     * @return Response back/post/list_corbeille.html.twig
+     * @return Response back/post/list_corbeille.twig
      */
     #[Route('/delete', name: '_delete', options: ['expose' => true])]
     #[IsGranted(PostVoter::DELETE)]
@@ -219,7 +219,7 @@ class PostController extends AbstractController
     /**
      * Pop-up de confirmation du changement de statut d'un ou plusieurs post.
      *
-     * @return Response back/_popup/_yes_no_popup.html.twig
+     * @return Response back/_popup/_yes_no_popup.twig
      */
     #[Route('/change_status/confirm', name: '_change_status_confirm', options: ['expose' => true])]
     #[IsGranted(PostVoter::CHANGE_STATUS)]
@@ -230,7 +230,7 @@ class PostController extends AbstractController
 
         return new Response(
             json_encode([
-                'content' => $this->renderView('back/_popup/_yes_no_popup.html.twig', compact('message')),
+                'content' => $this->renderView('back/_popup/_yes_no_popup.twig', compact('message')),
                 'titre' => 'Changement de statut',
             ])
         );
@@ -239,7 +239,7 @@ class PostController extends AbstractController
     /**
      * Changement du statut d'un ou plusieurs post.
      *
-     * @return Response back/post/list.html.twig
+     * @return Response back/post/list.twig
      */
     #[Route('/change_status', name: '_change_status', options: ['expose' => true])]
     #[IsGranted(PostVoter::CHANGE_STATUS)]

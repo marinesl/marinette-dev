@@ -1,0 +1,27 @@
+{% extends "front/base.html.twig" %}
+
+{% block meta_description %}{{ post.metaDescription }}{% endblock %}
+
+{% block meta_keyword %}{{ post.metaKeyword }}{% endblock %}
+
+{% block title %}Prévisualisation - {{ post.title }}{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+    <div>
+        Le post est en statut {{ post.status.name }}
+    </div>
+
+    <div>
+        <a href="{{ path('back_post_edit', { slug: post.slug, is_preview: 0 }) }}">Retourner dans le manager</a>
+    </div>
+
+    {{ post.content|raw }}
+
+    {{ post.category.name }}
+    
+{% endblock %}
+
+{% block javascripts %}{% endblock %}

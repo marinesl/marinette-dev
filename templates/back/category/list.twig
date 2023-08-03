@@ -1,0 +1,32 @@
+{% extends "back/base.html.twig" %}
+
+{% block title %}
+    Les catégories{% if is_corbeille %} dans la corbeille{% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+
+    {# Style pour DataTables JS #}
+    {{ encore_entry_link_tags('datatables') }}
+
+{% endblock %}
+
+{% block body %}
+
+    <h1>Les catégories {% if is_corbeille %} dans la corbeille{% else %}en cours{% endif %}</h1>
+    
+    {# Tableau #}
+    {% include "back/_includes/_category_list.html.twig" %}
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        var is_corbeille = {% if is_corbeille %}true{% else %}false{% endif %}
+    </script>
+
+    {# Script pour la page #}
+    {{ encore_entry_script_tags('category') }}
+
+{% endblock %}

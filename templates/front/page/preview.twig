@@ -1,0 +1,25 @@
+{% extends "front/base.html.twig" %}
+
+{% block meta_description %}{{ page.metaDescription }}{% endblock %}
+
+{% block meta_keyword %}{{ page.metaKeyword }}{% endblock %}
+
+{% block title %}Prévisualisation - {{ page.title }}{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+
+    <div>
+        La page est en statut {{ page.status.name }}
+    </div>
+
+    <div>
+        <a href="{{ path('back_page_edit', { slug: page.slug, is_preview: 0 }) }}">Retourner dans le manager</a>
+    </div>
+
+    {{ page.content|raw }}
+    
+{% endblock %}
+
+{% block javascripts %}{% endblock %}

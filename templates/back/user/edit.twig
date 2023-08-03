@@ -1,0 +1,52 @@
+{% extends "back/base.html.twig" %}
+
+{% block title %}Modifier votre profil{% endblock %}
+
+{% block body %}
+
+    <h1>Modifier votre profil</h1>
+
+    {{ form_start(form) }}
+        <div class="row">
+            {# Colonne de gauche #}
+            <div class="col-8">
+                <div class="form-group">
+                    {{ form_row(form.last_name) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.first_name) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.username) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_row(form.email) }}
+                </div>
+            </div>
+
+            {# Colonne de droite #}
+            <div class="col-4">
+                
+
+                <fieldset>
+                    <legend>Paramètres</legend>
+
+                    <div class="form-group">
+                        <div>Connecté.e le : {{ user.lastLoggedAt|date('d/m/Y') }}</div>
+                        <div>Créé.e le : {{ user.createdAt|date('d/m/Y') }}</div>
+                        <div>Modifié.e le : {{ user.editedAt|date('d/m/Y') }}</div>
+                    </div>
+
+                    <div class="form-group d-flex justify-content-between">
+                        {{ form_row(form.save) }}
+                        <a class="btn btn-info" href="{{ path('back_user_edit_password', { username: user.username }) }}">Mot de passe</a>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    {{ form_end(form) }}
+
+{% endblock %}

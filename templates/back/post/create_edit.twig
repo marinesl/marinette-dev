@@ -1,0 +1,115 @@
+{% extends "back/base.html.twig" %}
+
+{% block title %}
+
+    {% if post is defined %}Modifier le post {{ post.title }}{% else %}Créer un post{% endif %}
+
+{% endblock %}
+
+{% block stylesheet %}
+    {{ encore_entry_link_tags('elementCreateEdit') }}
+{% endblock %}
+
+{% block body %}
+
+    {% if post is defined %}
+        <h1 data-post="{{ post.id }}" data-slug="{{ post.slug }}">Modifier le post {{ post.title }}</h1>
+    {% else %}
+        <h1>Créer un post</h1>
+    {% endif %}
+
+    {{ form_start(form) }}
+        <div class="row">
+            {# Colonne de gauche #}
+            <div class="col-8">
+                <div class="form-group">
+                    {{ form_label(form.title) }}
+                    {{ form_widget(form.title) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.slug) }}
+                    <div class="d-flex align-items-center">
+                        <div>{{ app_host }}/</div>
+                        {{ form_widget(form.slug) }}
+                    </div>
+                    {{ form_errors(form.slug) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.content) }}
+                    {{ form_widget(form.content) }}
+                    {{ form_errors(form.content) }}
+                </div>
+                    
+                <fieldset>
+                    <legend>SEO</legend>
+
+                    <div class="form-group">
+                        {{ form_label(form.meta_description) }}
+                        {{ form_widget(form.meta_description) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.meta_keyword) }}
+                        {{ form_widget(form.meta_keyword) }}
+                    </div>
+                </fieldset>
+            </div>
+
+            {# Colonne de droite #}
+            <div class="col-4">
+
+                <fieldset>
+                    <legend>Paramètres</legend>
+
+                    <div class="form-group">
+                        {{ form_label(form.status) }}
+                        {{ form_widget(form.status) }}
+                    </div>
+
+                    <div class="form-group">
+                        {% if post is defined %}
+                            <div>Créée le : {{ post.createdAt|date('d/m/Y H:i') }}</div>
+                            <div>Modifiée le : {{ post.editedAt|date('d/m/Y H:i') }}</div>
+                        {% else %}
+                            <div>Créée le : {{ "now"|date('d/m/Y H:i') }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group d-flex justify-content-between">
+                        {{ form_row(form.save) }}
+                        {{ form_row(form.preview) }}
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <legend>Catégorie</legend>
+
+                    <div class="form-group">
+                        {{ form_label(form.category) }}
+                        {{ form_widget(form.category) }}
+                    </div>
+
+                    {% if post is defined and post.category.status.id != 1 %}
+                        <div>Attention : la catégorie {{ post.category.name }} n'est pas publiée, votre post ne sera pas visible.</div>
+                    {% endif %}
+                </fieldset>
+            </div>
+        </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    
+    <script>
+        const is_preview = '{{ is_preview ? 1 : 0 }}';
+        const element_toString = 'post';
+    </script>
+
+    {# Script pour la page #}
+    {{ encore_entry_script_tags('elementCreateEdit') }}
+
+{% endblock %}

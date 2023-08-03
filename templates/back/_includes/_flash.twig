@@ -1,0 +1,5 @@
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        {% include "back/_includes/_flash_inside.html.twig" with { message: message, label: label } %}
+    {% endfor %}
+{% endfor %}

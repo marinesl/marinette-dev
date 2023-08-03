@@ -1,0 +1,83 @@
+{% extends "back/base.html.twig" %}
+
+{% block title %}Les médias{% endblock %}
+
+{% block id %}media{% endblock %}
+
+{% block stylesheets %}
+
+    {# Style pour Dropzone Js #}
+    {{ encore_entry_link_tags('media') }}
+
+{% endblock %}
+
+{% block body %}
+
+    <h1>Les médias</h1>
+
+    <div class="row-first">
+        <div><button class="btn btn-primary" id="add-file">Ajouter un fichier</button></div>
+
+        {# Formulaire filtre #}
+        <div>
+            {{ form_start(formFilter) }}
+                <div class="form-group">
+                    <div class="d-flex">
+                        {{ form_widget(formFilter.title) }}
+                        {{ form_row(formFilter.send) }}
+                        <a class="btn btn-info" href="{{ path('back_media') }}">Réinitialiser</a>
+                    </div>
+                    {{ form_errors(formFilter.title) }}
+                </div>
+
+            {{ form_end(formFilter) }}
+
+        </div>
+    </div>
+
+    {# Formulaire drag and drop #}
+    <div>
+        {{ form_start(formDragAndDrop) }}
+        {{ form_end(formDragAndDrop) }}
+    </div>
+
+    <div class="row gallery">
+
+        {% for media in pagination %}
+
+            {% if media.category.id == 1 %}
+
+                {# On récupère le lien du média #}
+                {% set path = 'uploads/' ~ media.category.slug ~ '/' ~ media.title ~ '.' ~ media.extension %}
+
+                <div class="col-md-4">
+                    <div class="thumbnail">
+                        <a href="{{ path('back_media_info', { slug: media.slug }) }}" target="_blank">
+                            <img src="{{ asset(path) | imagine_filter('thumb_list') }}" alt="{{ media.slug }}" class="img-responsive">
+                            <div class="caption">
+                                <h4>{{ media.slug }}</h4>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+    {# display navigation #}
+    {# vendor/knplabs/knp-paginator-bundle/templates/Pagination/sliding.html.twig #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {# Script de la page #}
+    {{ encore_entry_script_tags('media') }}
+
+{% endblock %}

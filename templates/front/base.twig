@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {# Block pour la meta description #}
+        <meta name="description" content="{% block meta_description %}{% endblock %}">
+
+        {# Block pour la meta keyword #}
+        <meta name="keywords" content="{% block meta_keyword %}{% endblock %}">
+
+        <title>{% block title %}{% endblock %} | Marinette.dev</title>
+
+        {# Script pour la partie Back #}
+        <link rel="stylesheet" href="{{ asset('style/front.css') }}">
+
+        {# Block pour les styles personnalisés #}
+        {% block stylesheets %}{% endblock %}
+    </head>
+
+    <body>
+        {# Header #}
+
+        <div class="container">
+
+            <section>
+                {# Contenu de la page #}
+                {% block body %}{% endblock %}
+            </section>
+            
+        </div>
+
+        {# Script pour la partie Back #}
+        <script src="{{ asset('script/front.js') }}"></script>
+
+        {# Block pour les scripts personnalisés #}
+        {% block javascripts %}{% endblock %}
+    </body>
+
+</html>

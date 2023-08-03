@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{% block title %}{% endblock %} | Marinette.dev</title>
+
+        {# Script pour Bootstrap #}
+        {{ encore_entry_link_tags('app') }}
+
+        {# Script pour la partie Back #}
+        {{ encore_entry_link_tags('back') }}
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+
+    <body id="{% block id %}{% endblock %}">
+        <section id="wrapper" class="d-flex w-100">
+
+            {% include "back/_includes/_navbar.html.twig" %}
+
+            <main class="w-100 bg-light d-flex flex-column" id="main">
+                {% include "back/_includes/_header.html.twig" %}
+
+                <section class="container-fluid">
+                    {% block body %}{% endblock %}
+                </section>
+
+                <footer id="footer" class="py-2 text-center shadow-sm mt-auto">
+                    <div>© Tous droits réservés</div>
+                </footer>
+
+            </main>
+
+        </section>
+
+        {# Messages flash #}
+        {% include "back/_includes/_flash.html.twig" %}
+
+        {% include "back/_popup/_popup.html.twig" %}
+
+        {# Script pour FOS Js Routing Bundle #}
+        {# https://github.com/FriendsOfSymfony/FOSJsRoutingBundle/blob/master/Resources/doc/index.rst #}
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
+        {# Script pour jQuery et Bootstrap #}
+        {{ encore_entry_script_tags('app') }}
+
+        <script>
+            {# TODO: mettre la variable ailleurs ? #}
+            const path_asset_img = {{ asset('img/') }}
+        </script>
+
+        {# Script pour le Back #}
+        {{ encore_entry_script_tags('back') }}
+
+        {% block javascripts %}{% endblock %}
+    </body>
+
+</html>

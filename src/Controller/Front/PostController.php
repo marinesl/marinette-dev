@@ -25,12 +25,12 @@ class PostController extends AbstractController
      *
      * @param Post post
      *
-     * @return Response front/post/preview.html.twig
+     * @return Response front/post/preview.twig
      */
     #[Route('/preview/post/{slug}', name: '_preview', options: ['expose' => true])]
     #[IsGranted('ROLE_ADMIN')]
     public function preview(Post $post): Response
     {
-        return $this->render('front/post/preview.html.twig', compact('post'));
+        return $this->render('front/post/preview.twig', compact('post'));
     }
 }

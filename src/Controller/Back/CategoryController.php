@@ -42,7 +42,7 @@ class CategoryController extends AbstractController
     /**
      * La liste des catégories qui n'ont pas le statut "Corbeille".
      *
-     * @return Response back/category/list.html.twig
+     * @return Response back/category/list.twig
      */
     #[Route('/', name: '', options: ['expose' => true])]
     #[IsGranted(CategoryVoter::VIEW)]
@@ -54,13 +54,13 @@ class CategoryController extends AbstractController
         // Si c'est la page corbeille
         $is_corbeille = false;
 
-        return $this->render('back/category/list.html.twig', compact('categories', 'is_corbeille'));
+        return $this->render('back/category/list.twig', compact('categories', 'is_corbeille'));
     }
 
     /**
      * La liste des catégories qui ont le statut "Corbeille".
      *
-     * @return Response back/page/list.html.twig
+     * @return Response back/page/list.twig
      */
     #[Route('/corbeille', name: '_corbeille', options: ['expose' => true])]
     #[IsGranted(CategoryVoter::VIEW)]
@@ -72,7 +72,7 @@ class CategoryController extends AbstractController
         // Si c'est la page corbeille
         $is_corbeille = true;
 
-        return $this->render('back/category/list.html.twig', compact('categories', 'is_corbeille'));
+        return $this->render('back/category/list.twig', compact('categories', 'is_corbeille'));
     }
 
     /**
@@ -108,7 +108,7 @@ class CategoryController extends AbstractController
      * @param PostCategory postCategory
      * @param Status status
      *
-     * @return Response back/_popup/_yes_no_popup.html.twig
+     * @return Response back/_popup/_yes_no_popup.twig
      */
     #[Route('/change_status/confirm/{postCategory}/{status}', name: '_change_status_confirm', options: ['expose' => true])]
     #[ParamConverter('postCategory', options: ['mapping' => ['postCategory' => 'slug']])]
@@ -135,7 +135,7 @@ class CategoryController extends AbstractController
 
         return new Response(
             json_encode([
-                'content' => $this->renderView('back/_popup/_yes_no_popup.html.twig', compact('message')),
+                'content' => $this->renderView('back/_popup/_yes_no_popup.twig', compact('message')),
                 'titre' => 'Changement de statut',
             ])
         );

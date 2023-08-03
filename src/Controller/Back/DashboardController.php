@@ -26,6 +26,6 @@ class DashboardController extends AbstractController
         // On récupère le nombre de posts par catégorie
         $categories = $postCategoryRepository->findPublishOrderByAlpha();
 
-        return $this->render('back/dashboard/index.html.twig', compact(['categories', 'posts']));
+        return $this->render('back/dashboard/index.twig', compact(['categories', 'posts']));
     }
 }
